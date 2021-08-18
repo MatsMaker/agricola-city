@@ -1,4 +1,4 @@
-import { Container, Point, Sprite, Texture } from 'pixi.js';
+import { Container, Point, Sprite } from 'pixi.js';
 import { injectable, inject } from 'inversify';
 import TYPES from '../../types/MainConfig';
 import Config from '../../core/config/Config';
@@ -9,6 +9,7 @@ import ViewPort from '../../core/viewPort/ViewPort';
 import { RENDER_CITY, RE_RENDER_CITY } from './types';
 import CityEntity from '../../entities/City.entity';
 import { MAP_OBJECT } from '../../types/MapEntities';
+import CityBuild from '../../entities/CityBuild.entity';
 
 
 @injectable()
@@ -24,7 +25,7 @@ class CityContainer {
 
 	public tileHeight: number = 26;
 	public tileWidth: number = 26;
-	public tileScale: number = 0.32;
+	public drawStart: Point;
 
 
 	constructor(
@@ -48,6 +49,8 @@ class CityContainer {
 		this.initContainer();
 		this.initListeners();
 		this.initCity();
+
+		this.drawStart = new Point(this.viewPort.getState().centerWidth - this.tileWidth, this.tileHeight);
 	}
 
 	protected initContainer = () => {
@@ -63,20 +66,35 @@ class CityContainer {
 	}
 
 	protected initCity = (): void => {
-		this.cityEntity = new CityEntity(this.config, this.assetsLoader);
+		this.cityEntity = new CityEntity(this.config, this.assetsLoader)
 	}
 
 	protected renderContent = () => {
-		this.cityEntity.fillData();
+		this.cityEntity.init();
 
 		this.drawMap(
 			this.cityEntity.terrain,
-			this.viewPort.getState().centerWidth - this.tileWidth,
-			this.tileHeight
+			this.drawStart.x,
+			this.drawStart.y
 		)((position: Point, data: MAP_OBJECT) => {
-			const drawTile = this.isoTile(data.texture);
-			drawTile(position.x, position.y);
+			const tile = this.isoTile(data, position.x, position.y);
+			this.container.addChild(tile);
 		})
+
+		this.drawMap(
+			this.cityEntity.objects,
+			this.drawStart.x,
+			this.drawStart.y
+		)((position: Point, data: MAP_OBJECT, coordinate: Point) => {
+			if (data && data instanceof CityBuild) {
+				const isAnchorCoordinate = data.x === coordinate.x && data.y === coordinate.y;
+				if (!isAnchorCoordinate) { return; }
+
+				const tile = this.isoTile(data, position.x, position.y);
+				this.container.addChild(tile);
+			}
+		});
+
 		this.reRender();
 	}
 
@@ -93,26 +111,24 @@ class CityContainer {
 		})
 	}
 
-	protected isoTile = (texture: Texture) => {
-		return (x: number, y: number) => {
-			const tile = new Sprite(texture);
-			tile.position.x = x;
-			tile.position.y = y;
+	protected isoTile(data: MAP_OBJECT, x: number, y: number): Sprite {
+			const tile = new Sprite(data.texture);
+			tile.position.x = x + data.offsetX;
+			tile.position.y = y + data.offsetY;
 
 			// bottom-left
-			tile.anchor.x = 0;
-			tile.anchor.y = 1;
-			tile.scale.set(this.tileScale, this.tileScale);
-
-			this.container.addChild(tile);
-		}
+			tile.anchor.x = data.anchor.x;
+			tile.anchor.y = data.anchor.y;
+			tile.scale.set(data.scale, data.scale);
+	
+			return tile;
 	}
 
-	protected drawMap = (terrain: MAP_OBJECT[][], xOffset: number, yOffset: number) => {
+	protected drawMap = (items: MAP_OBJECT[][], xOffset: number, yOffset: number) => {
 		let x, y, isoX, isoY;
-		return (fn: (coordinate: Point, data: MAP_OBJECT) => void) => {
-				for (let i = 0, iL = terrain.length; i < iL; i++) {
-					for (let j = 0, jL = terrain[i].length; j < jL; j++) {
+		return (fn: (position: Point, data: MAP_OBJECT, coordinate: Point) => void) => {
+				for (let i = 0, iL = items.length; i < iL; i++) {
+					for (let j = 0, jL = items[i].length; j < jL; j++) {
 							// cartesian 2D coordinate
 							x = j * this.tileWidth;
 							y = i * this.tileHeight;
@@ -121,9 +137,10 @@ class CityContainer {
 							isoX = x - y;
 							isoY = (x + y) / 2;
 
-							const data = terrain[i][j];
+							const data = items[i][j];
 							const position = new Point(isoX + xOffset, isoY + yOffset);
-							fn(position, data);
+							const coordinate = new Point(j, i)
+							fn(position, data, coordinate);
 					}
 			}
 		}

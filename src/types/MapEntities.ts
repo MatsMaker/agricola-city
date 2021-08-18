@@ -1,5 +1,5 @@
 
-import { Texture, Sprite } from 'pixi.js';
+import { Texture, Sprite, Point } from 'pixi.js';
 
 
 export enum MAP_OBJECT_TYPE {
@@ -16,7 +16,14 @@ export interface BASE_MAP_OBJECT {
 }
 
 export interface MAP_OBJECT extends BASE_MAP_OBJECT {
-	size: number,
-	texture: Texture,
-	sprite: Sprite,
+	size: number
+	texture: Texture
+	sprite: Sprite
+
+	offsetX?: number
+	offsetY?: number
+	scale?: number
+	anchor?: Point
+
+	id?: string | number
 }

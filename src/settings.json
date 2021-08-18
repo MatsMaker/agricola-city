@@ -20,19 +20,14 @@
 		}
 	},
 	"citySize": {
-		"width": 21,
-		"height": 21
+		"width": 11,
+		"height": 11
 	},
 	"startCityData": [
-		{	
-			"x" : 8,
-			"y": 8,
+		{
+			"x" : 4,
+			"y": 4,
 			"type": "HOME"
-		},
-		{	
-			"x" : 7,
-			"y": 7,
-			"type": "ROAD"
 		}
 	]
 }
