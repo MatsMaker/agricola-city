@@ -1,0 +1,38 @@
+{
+	"assetsPath": "/assets",
+	"assetsList": [
+		"img/altar.png",
+		"img/house-2-02.png",
+		"img/road1.png",
+		"img/Senat_02.png",
+		"img/Tiles.png",
+		"img/bg-prlx-big.jpg",
+		"img/grass.json"
+	],
+	"fonts": {
+		"custom": {
+			"families": [
+				"DRAguSans"
+			],
+			"urls": [
+				"/assets/font/DRAguSans-Black.ttf"
+			]
+		}
+	},
+	"citySize": {
+		"width": 21,
+		"height": 21
+	},
+	"startCityData": [
+		{	
+			"x" : 8,
+			"y": 8,
+			"type": "HOME"
+		},
+		{	
+			"x" : 7,
+			"y": 7,
+			"type": "ROAD"
+		}
+	]
+}

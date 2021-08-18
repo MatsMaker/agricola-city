@@ -1,0 +1,40 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "target": "es6",
+    "types": [
+      "reflect-metadata",
+      "node"
+    ],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "module": "commonjs",
+    "lib": [
+      "es2017",
+      "dom"
+    ],
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "baseUrl": "./src/",
+    "paths": {
+      "@app/*": [
+        "app/*"
+      ],
+      "@models/*": [
+        "models/*"
+      ],
+      "@assets/*": [
+        "assets/*"
+      ]
+    }
+  }
+}
