@@ -6,11 +6,16 @@ import AssetsLoader from '../../core/assetsLoader/AssetsLoader';
 import { StoreType } from 'store';
 import { onEvent } from '../../utils/store.subscribe';
 import ViewPort from '../../core/viewPort/ViewPort';
-import { RENDER_CITY, RE_RENDER_CITY } from './types';
+import { RENDER_CITY, RE_RENDER_CITY, BUILD } from './types';
 import CityEntity from '../../entities/City.entity';
 import { MAP_OBJECT } from '../../types/MapEntities';
 import CityBuild from '../../entities/CityBuild.entity';
 
+
+export interface ContainerObject {
+	sprite: Sprite
+	entity: MAP_OBJECT
+}
 
 @injectable()
 class CityContainer {
@@ -22,6 +27,9 @@ class CityContainer {
 	protected viewPort: ViewPort;
 	protected container: Container;
 	protected cityEntity: CityEntity;
+
+	protected cityTerrains: ContainerObject[] = [];
+	protected cityObjects: ContainerObject[] = [];
 
 	public tileHeight: number = 26;
 	public tileWidth: number = 26;
@@ -63,6 +71,7 @@ class CityContainer {
 		const { subscribe } = this.store
 		subscribe(onEvent(RENDER_CITY, this.render.bind(this)))
 		subscribe(onEvent(RE_RENDER_CITY, this.reRender.bind(this)))
+		subscribe(onEvent(BUILD, this.build.bind(this)))
 	}
 
 	protected initCity = (): void => {
@@ -78,6 +87,10 @@ class CityContainer {
 			this.drawStart.y
 		)((position: Point, data: MAP_OBJECT) => {
 			const tile = this.isoTile(data, position.x, position.y);
+			this.cityTerrains.push({
+				sprite: tile,
+				entity: data,
+			})
 			this.container.addChild(tile);
 		})
 
@@ -91,6 +104,10 @@ class CityContainer {
 				if (!isAnchorCoordinate) { return; }
 
 				const tile = this.isoTile(data, position.x, position.y);
+				this.cityObjects.push({
+					sprite: tile,
+					entity: data,
+				})
 				this.container.addChild(tile);
 			}
 		});
@@ -107,7 +124,7 @@ class CityContainer {
 
 	protected reRender(): void {
 		this.viewPort.addTickOnce(() => {
-			// const { viewPort } = this.store.getState();
+
 		})
 	}
 
@@ -144,6 +161,10 @@ class CityContainer {
 					}
 			}
 		}
+	}
+
+	protected build(store: StoreType, payload: any): void {
+		console.log('build', payload, store);
 	}
 
 }

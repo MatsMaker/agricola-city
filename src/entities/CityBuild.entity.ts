@@ -1,8 +1,9 @@
 import CityObject from './CityObject.entity';
 import { Texture } from 'pixi.js';
 import { MAP_OBJECT_TYPE } from 'types/MapEntities';
+import { MAP_OBJECT } from '../types/MapEntities';
 
-class CityBuild extends CityObject {
+class CityBuild extends CityObject implements MAP_OBJECT {
 
 	public offsetX: number = -33
 	public offsetY: number = 26

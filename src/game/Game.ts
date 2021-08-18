@@ -9,6 +9,9 @@ import { initStartGameAction } from '../stages/action';
 import { removeLoader } from '../utils/loader';
 import StartGameStage from '../stages/StartGame.stage';
 import ViewPort from '../core/viewPort/ViewPort';
+import { buildAction } from '../containers/city/action';
+import { MAP_OBJECT_TYPE } from '../types/MapEntities';
+import { Point } from 'pixi.js';
 
 @injectable()
 class Game {
@@ -43,6 +46,12 @@ class Game {
 	protected initStage = (): void => {
 		removeLoader();
 		this.store.dispatch(initStartGameAction())
+
+
+		setTimeout(() => { // TODO REMOVE IT NEED FOR DEBUG build method
+			this.store.dispatch(buildAction(MAP_OBJECT_TYPE.HOME, new Point(0, 9)))
+		}, 3000);
+
 	}
 
 	public launch(): void {
