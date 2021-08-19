@@ -1,25 +1,24 @@
-import { RENDER_CITY, ActionTypes, RE_RENDER_CITY, BUILD } from './types';
-import { MAP_OBJECT_TYPE } from 'types/MapEntities';
-import { Point } from 'pixi.js';
+import { BuildActionRequest, CityActionType } from "./types";
 
-export function renderCityAction(): ActionTypes {
+export const RE_RENDER_CITY = '@CONTAINER/City/re_render_city';
+export const BUILD = '@CONTAINER/City/build';
+export const RENDER_CITY = '@CONTAINER/City/render_city';
+
+export function renderCityAction(): CityActionType {
 	return {
 		type: RENDER_CITY,
 	}
 }
 
-export function  reRenderCityAction(): ActionTypes {
+export function  reRenderCityAction(): CityActionType {
 	return {
 		type: RE_RENDER_CITY,
 	}
 }
 
-export function  buildAction(objectType: MAP_OBJECT_TYPE, coordinate: Point) {
+export function  buildAction(payload: BuildActionRequest) {
 	return {
 		type: BUILD,
-		payload: {
-			objectType,
-			coordinate,
-		}
+		payload,
 	}
 }

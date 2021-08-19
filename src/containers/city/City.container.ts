@@ -6,10 +6,11 @@ import AssetsLoader from '../../core/assetsLoader/AssetsLoader';
 import { StoreType } from 'store';
 import { onEvent } from '../../utils/store.subscribe';
 import ViewPort from '../../core/viewPort/ViewPort';
-import { RENDER_CITY, RE_RENDER_CITY, BUILD } from './types';
+import { BuildActionRequest, CityActionTypePayload } from './types';
 import CityEntity from '../../entities/City.entity';
 import { MAP_OBJECT } from '../../types/MapEntities';
 import CityBuild from '../../entities/CityBuild.entity';
+import { BUILD, RENDER_CITY, RE_RENDER_CITY } from './action';
 
 
 export interface ContainerObject {
@@ -118,6 +119,8 @@ class CityContainer {
 	protected render(): void {
 		this.viewPort.addTickOnce(() => {
 			this.renderContent();
+			const { scene } = this.viewPort
+			scene.addChild(this.view)
 			this.container.visible = true;
 		})
 	}
@@ -163,8 +166,8 @@ class CityContainer {
 		}
 	}
 
-	protected build(store: StoreType, payload: any): void {
-		console.log('build', payload, store);
+	protected build(store: StoreType, payload: CityActionTypePayload<BuildActionRequest>): void {
+		console.log('build', store, payload);
 	}
 
 }

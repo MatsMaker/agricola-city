@@ -34,24 +34,20 @@ class StartGameStage {
 		this.initListeners();
 	}
 
-	protected initScreen() {
-		const { dispatch } = this.store
-		const { scene } = this.viewPort
-
-		scene.addChild(this.backgroundContainer.view)
-		scene.addChild(this.cityContainer.view)
-
-		dispatch(renderBackgroundAction())
-		dispatch(renderCityAction())
-
-		this.viewPort.addTickOnce(this.initiatedScreen.bind(this))
-	}
-
 	protected initiatedScreen() {
 		const { dispatch } = this.store
 		this.viewPort.addTickOnce(() => {
 			dispatch(initiatedStartGameAction())
 		})
+	}
+
+	protected initScreen() {
+		const { dispatch } = this.store
+
+		dispatch(renderBackgroundAction())
+		dispatch(renderCityAction())
+
+		this.viewPort.addTickOnce(this.initiatedScreen.bind(this))
 	}
 
 	protected initListeners(): void {

@@ -49,7 +49,10 @@ class Game {
 
 
 		setTimeout(() => { // TODO REMOVE IT NEED FOR DEBUG build method
-			this.store.dispatch(buildAction(MAP_OBJECT_TYPE.HOME, new Point(0, 9)))
+			this.store.dispatch(buildAction({
+				objectType: MAP_OBJECT_TYPE.HOME,
+				coordinate: new Point(0, 9)
+			}))
 		}, 3000);
 
 	}

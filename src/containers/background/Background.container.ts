@@ -65,6 +65,10 @@ class BackgroundContainer {
 	protected render(): void {
 		this.viewPort.addTickOnce(() => {
 			this.renderContent();
+
+			const { scene } = this.viewPort
+			scene.addChild(this.view)
+
 			this.container.visible = true;
 		})
 	}
