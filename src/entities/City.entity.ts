@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import Config from '../core/config/Config';
 import AssetsLoader from '../core/assetsLoader/AssetsLoader';
 import { MAP_OBJECT, MAP_OBJECT_TYPE } from '../types/MapEntities';
-import { Texture } from 'pixi.js';
+import { Texture, Point } from 'pixi.js';
 import CityLand from './CityLand.entity';
 import CityBuild from './CityBuild.entity';
 
@@ -70,6 +70,12 @@ class CityEntity {
 					}
 				}
 		})
+	}
+
+	public newBuild = (type: MAP_OBJECT_TYPE, coordinate: Point): CityBuild =>  {
+		const { x, y } = coordinate;
+		const build = new CityBuild(x, y, this.getTextureByObjectType(type), type);
+		return build;
 	}
 
 	protected getTextureByObjectType(type: MAP_OBJECT_TYPE): Texture {
