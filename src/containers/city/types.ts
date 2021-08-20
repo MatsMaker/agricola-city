@@ -15,6 +15,12 @@ export interface BuildActionRequest {
 	coordinate: Point
 }
 
+
+export interface IsoPoint {
+	position: Point,
+	coordinate: Point,
+}
+
 export interface DrawCb {
 	position: Point,
 	data: MAP_OBJECT,

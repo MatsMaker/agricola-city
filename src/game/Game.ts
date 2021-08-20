@@ -9,9 +9,9 @@ import { initStartGameAction } from '../stages/action';
 import { removeLoader } from '../utils/loader';
 import StartGameStage from '../stages/StartGame.stage';
 import ViewPort from '../core/viewPort/ViewPort';
-import { buildAction } from '../containers/city/action';
+import { buildAction, ON_TERRAIN_CLICK } from '../containers/city/action';
 import { MAP_OBJECT_TYPE } from '../types/MapEntities';
-import { Point } from 'pixi.js';
+import { CityActionTypePayload, IsoPoint } from 'containers/city/types';
 
 @injectable()
 class Game {
@@ -41,24 +41,23 @@ class Game {
 	protected initListeners(): void {
 		const { subscribe } = this.store
 		subscribe(onEvent(ASSETS_IS_LOADED, this.initStage))
+		subscribe(onEvent(ON_TERRAIN_CLICK, this.requestToBuild))
 	}
 
 	protected initStage = (): void => {
 		removeLoader();
 		this.store.dispatch(initStartGameAction())
-
-
-		setTimeout(() => { // TODO REMOVE IT NEED FOR DEBUG build method
-			this.store.dispatch(buildAction({
-				objectType: MAP_OBJECT_TYPE.HOME,
-				coordinate: new Point(3, 9)
-			}))
-		}, 3000);
-
 	}
 
 	public launch(): void {
 		this.assetsLoader.load()
+	}
+
+	protected requestToBuild = (request: CityActionTypePayload<IsoPoint>) => {
+		this.store.dispatch(buildAction({
+			objectType: MAP_OBJECT_TYPE.HOME,
+			coordinate: request.payload.coordinate,
+		}))
 	}
 
 }
