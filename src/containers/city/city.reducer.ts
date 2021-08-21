@@ -1,3 +1,4 @@
+import { AnyAction } from "redux";
 import { MAP_OBJECT } from "../../types/MapEntities";
 
 export interface ICityState {
@@ -10,7 +11,10 @@ const initialState: ICityState = {
 	objects: [],
 };
 
-export function cityReducer(state = initialState, action: any): ICityState {
+export function cityReducer(
+	state = initialState,
+	action: AnyAction
+): ICityState {
 	switch (action.type) {
 		default:
 			return state;

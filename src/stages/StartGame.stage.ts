@@ -3,15 +3,14 @@ import BackgroundContainer from "../containers/background/Background.container";
 import TYPES from "../types/MainConfig";
 import { StoreType } from "../store";
 import {
-	renderBackgroundAction,
+	initBackgroundAction,
 	reRenderBackgroundAction,
 } from "../containers/background/action";
 import ViewPort from "../core/viewPort/ViewPort";
 import { onEvent } from "../utils/store.subscribe";
-import { VIEW_PORT_RESIZE_ACTION } from "../core/viewPort/types";
-import { INIT_START_GAME_STAGE } from "./types";
-import { initiatedStartGameAction } from "./action";
+import { initiatedStartGameAction, INIT_START_GAME_STAGE } from "./action";
 import CityContainer from "../containers/city/City.container";
+import { VIEW_PORT_RESIZE_ACTION } from "../core/viewPort/actions";
 import {
 	renderCityAction,
 	reRenderCityAction,
@@ -48,7 +47,7 @@ class StartGameStage {
 	protected initScreen() {
 		const { dispatch } = this.store;
 
-		dispatch(renderBackgroundAction());
+		dispatch(initBackgroundAction());
 		dispatch(renderCityAction());
 
 		this.viewPort.addTickOnce(this.initiatedScreen.bind(this));

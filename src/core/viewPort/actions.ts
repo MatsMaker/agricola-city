@@ -1,6 +1,8 @@
-import { VIEW_PORT_RESIZE_ACTION, VPActionTypes } from "./types";
+import { ActionType } from "../../types/actions";
 
-export function viewPortResizeAction(): VPActionTypes {
+export const VIEW_PORT_RESIZE_ACTION = "@CORE/VIEW_PORT/resize";
+
+export function viewPortResizeAction(): ActionType {
 	return {
 		type: VIEW_PORT_RESIZE_ACTION,
 	};

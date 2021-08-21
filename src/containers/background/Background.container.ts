@@ -4,7 +4,7 @@ import TYPES from "../../types/MainConfig";
 import AssetsLoader from "../../core/assetsLoader/AssetsLoader";
 import { StoreType } from "store";
 import { onEvent } from "../../utils/store.subscribe";
-import { RENDER_BACKGROUND, RE_RENDER_BACKGROUND } from "./types";
+import { INIT_BACKGROUND, RE_RENDER_BACKGROUND } from "./action";
 import ViewPort from "../../core/viewPort/ViewPort";
 
 @injectable()
@@ -43,7 +43,7 @@ class BackgroundContainer {
 
   protected initListeners = (): void => {
     const { subscribe } = this.store;
-    subscribe(onEvent(RENDER_BACKGROUND, this.render.bind(this)));
+    subscribe(onEvent(INIT_BACKGROUND, this.render.bind(this)));
     subscribe(onEvent(RE_RENDER_BACKGROUND, this.reRender.bind(this)));
   };
 

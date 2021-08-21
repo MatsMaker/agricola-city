@@ -1,17 +1,32 @@
-import { BuildActionRequest, CityActionType, IsoPoint } from "./types";
+import { BuildActionRequest, IsoPoint } from "./types";
+import { ActionType } from '../../types/actions';
 
+export const INIT_CITY = "@CONTAINER/City/init_city";
+export const CITY_MODEL_IS_READY = "@CONTAINER/City/city_model_is_ready";
+export const RENDER_CITY = "@CONTAINER/City/render_city";
 export const RE_RENDER_CITY = "@CONTAINER/City/re_render_city";
 export const BUILD = "@CONTAINER/City/build";
-export const RENDER_CITY = "@CONTAINER/City/render_city";
 export const ON_TERRAIN_CLICK = "@CONTAINER/City/on_terrain_click";
 
-export function renderCityAction(): CityActionType {
+export function initCity(): ActionType {
+	return {
+		type: INIT_CITY,
+	};
+}
+
+export function cityModelIsReady(): ActionType {
+	return {
+		type: CITY_MODEL_IS_READY,
+	};
+}
+
+export function renderCityAction(): ActionType {
 	return {
 		type: RENDER_CITY,
 	};
 }
 
-export function reRenderCityAction(): CityActionType {
+export function reRenderCityAction(): ActionType {
 	return {
 		type: RE_RENDER_CITY,
 	};

@@ -10,7 +10,8 @@ import StartGameStage from "../stages/StartGame.stage";
 import ViewPort from "../core/viewPort/ViewPort";
 import { buildAction, ON_TERRAIN_CLICK } from "../containers/city/action";
 import { MAP_OBJECT_TYPE } from "../types/MapEntities";
-import { CityActionTypePayload, IsoPoint } from "containers/city/types";
+import { IsoPoint } from "../containers/city/types";
+import { ActionType } from '../types/actions';
 
 @injectable()
 class Game {
@@ -48,7 +49,7 @@ class Game {
 		this.assetsLoader.load();
 	}
 
-	protected requestToBuild = (request: CityActionTypePayload<IsoPoint>) => {
+	protected requestToBuild = (request: ActionType<IsoPoint>) => {
 		this.store.dispatch(
 			buildAction({
 				objectType: MAP_OBJECT_TYPE.HOME,

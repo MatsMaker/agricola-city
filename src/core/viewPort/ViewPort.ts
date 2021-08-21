@@ -7,7 +7,8 @@ import { waitReRenderViewPort } from "./utils";
 import { viewPortResizeAction } from "./actions";
 import { Application, Container, Ticker } from "pixi.js";
 import { onEvent } from "../../utils/store.subscribe";
-import { ViewPortState, VIEW_PORT_RESIZE_ACTION } from "./types";
+import { ViewPortState } from "./types";
+import { VIEW_PORT_RESIZE_ACTION } from "./actions";
 
 @injectable()
 class ViewPort {

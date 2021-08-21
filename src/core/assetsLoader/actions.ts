@@ -1,6 +1,7 @@
-import { ASSETS_IS_LOADED, AssetsActionTypes } from "./types";
+import { ASSETS_IS_LOADED } from "./types";
+import { ActionType } from '../../types/actions';
 
-export function assetsIsLoadedAction(): AssetsActionTypes {
+export function assetsIsLoadedAction(): ActionType {
   return {
     type: ASSETS_IS_LOADED,
   };

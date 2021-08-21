@@ -1,14 +1,15 @@
 import * as _ from "lodash";
-import AssetsLoader from "../core/assetsLoader/AssetsLoader";
-import { MAP_OBJECT, MAP_OBJECT_TYPE } from "../types/MapEntities";
+import AssetsLoader from "../../core/assetsLoader/AssetsLoader";
+import { MAP_OBJECT, MAP_OBJECT_TYPE } from "../../types/MapEntities";
 import { Texture, Point } from "pixi.js";
-import CityLand from "./CityLand.entity";
-import CityBuild from "./CityBuild.entity";
-import { IConfigState } from "../core/config/Config.reducer";
+import CityLand from "../../entities/CityLand.entity";
+import CityBuild from "../../entities/CityBuild.entity";
+import { IConfigState } from "../../core/config/Config.reducer";
 
-class CityEntity {
+class CityCore {
 	public terrain: MAP_OBJECT[][] = [];
 	public objects: MAP_OBJECT[][] = [];
+
 	protected config: IConfigState;
 	protected assetsLoader: AssetsLoader;
 
@@ -31,18 +32,24 @@ class CityEntity {
 		}
 	}
 
+	protected createGreed = (): any[][] => {
+		const greed: any[] = [];
+		this.forEachPoints((x, y) => {
+			if (!greed[y]) {
+				greed[y] = [];
+			}
+			if (!greed[y][x]) {
+				greed[y][x] = undefined;
+			}
+		});
+		return greed;
+	};
+
 	protected fillTerrainData(): void {
 		const grasTextures = this.assetsLoader.getResource("img/grass").textures;
 		const grasTexturesKeys = Object.keys(grasTextures);
 
-		this.forEachPoints((x, y) => {
-			if (!this.terrain[y]) {
-				this.terrain[y] = [];
-			}
-			if (!this.terrain[y][x]) {
-				this.terrain[y][x] = undefined;
-			}
-		});
+		this.terrain = this.createGreed();
 		this.forEachPoints((x, y) => {
 			const randomLandTexture =
 				grasTexturesKeys[_.random(0, grasTexturesKeys.length - 1)];
@@ -58,14 +65,7 @@ class CityEntity {
 	protected fillObjectsData(): void {
 		const { startCityData } = this.config;
 
-		this.forEachPoints((x, y) => {
-			if (!this.objects[y]) {
-				this.objects[y] = [];
-			}
-			if (!this.objects[y][x]) {
-				this.objects[y][x] = undefined;
-			}
-		});
+		this.objects = this.createGreed();
 		this.forEachPoints((x, y) => {
 			const pointData = startCityData.find((d) => d.x === x && d.y === y); // TODO need extend for set big size objects
 			if (pointData) {
@@ -87,6 +87,7 @@ class CityEntity {
 	public newBuild = (type: MAP_OBJECT_TYPE, coordinate: Point): CityBuild => {
 		const { x, y } = coordinate;
 		const build = new CityBuild(x, y, this.getTextureByObjectType(type), type);
+		this.objects[y][x] = build;
 		return build;
 	};
 
@@ -105,4 +106,4 @@ class CityEntity {
 	}
 }
 
-export default CityEntity;
+export default CityCore;

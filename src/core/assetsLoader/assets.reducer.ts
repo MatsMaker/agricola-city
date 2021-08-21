@@ -1,4 +1,5 @@
-import { AssetsActionTypes, AssetsState, ASSETS_IS_LOADED } from "./types";
+import { AssetsState, ASSETS_IS_LOADED } from "./types";
+import { AnyAction } from "redux";
 
 const initialState: AssetsState = {
   assetsIsLoaded: false,
@@ -6,7 +7,7 @@ const initialState: AssetsState = {
 
 export function assetsReducer(
   state = initialState,
-  action: AssetsActionTypes
+  action: AnyAction
 ): AssetsState {
   switch (action.type) {
     case ASSETS_IS_LOADED: {

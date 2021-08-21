@@ -1,8 +1,4 @@
-export interface ActionType<TAction> {
-	type: TAction;
-}
-
-export interface ActionPayload<TAction, TPayload> {
-	type: TAction;
-	payload: TPayload;
+export interface ActionType<TPayload = void> {
+	type: string;
+	payload?: TPayload;
 }

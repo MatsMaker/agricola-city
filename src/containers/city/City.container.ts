@@ -5,8 +5,8 @@ import AssetsLoader from "../../core/assetsLoader/AssetsLoader";
 import { StoreType } from "store";
 import { onEvent } from "../../utils/store.subscribe";
 import ViewPort from "../../core/viewPort/ViewPort";
-import { BuildActionRequest, CityActionTypePayload, DrawCb } from "./types";
-import CityEntity from "../../entities/City.entity";
+import { BuildActionRequest, DrawCb } from "./types";
+import CityCore from "./City.core";
 import { MAP_OBJECT } from "../../types/MapEntities";
 import CityBuild from "../../entities/CityBuild.entity";
 import {
@@ -15,6 +15,7 @@ import {
   RENDER_CITY,
   RE_RENDER_CITY,
 } from "./action";
+import { ActionType } from "../../types/actions";
 
 export interface ContainerObject {
   sprite: Sprite;
@@ -28,7 +29,7 @@ class CityContainer {
   protected assetsLoader: AssetsLoader;
   protected viewPort: ViewPort;
   protected container: Container;
-  protected cityEntity: CityEntity;
+  protected cityCore: CityCore;
 
   protected cityTerrains: ContainerObject[] = [];
   protected cityObjects: ContainerObject[] = [];
@@ -69,7 +70,7 @@ class CityContainer {
 
   protected initCity = (): void => {
     const { config } = this.store.getState();
-    this.cityEntity = new CityEntity(config, this.assetsLoader);
+    this.cityCore = new CityCore(config, this.assetsLoader);
   };
 
   protected drawMap = (
@@ -125,13 +126,12 @@ class CityContainer {
   };
 
   protected renderContent = () => {
-    this.cityEntity.init();
+    this.cityCore.init();
 
-    this.drawMap(this.cityEntity.terrain, this.renderTerrain);
+    this.drawMap(this.cityCore.terrain, this.renderTerrain);
 
-    this.drawMap(this.cityEntity.objects, this.renderObject);
+    this.drawMap(this.cityCore.objects, this.renderObject);
 
-    this.reRender();
   };
 
   protected onTerrainClick = (e: any) => {
@@ -188,7 +188,9 @@ class CityContainer {
   }
 
   protected reRender(): void {
-    this.viewPort.addTickOnce(() => { });
+    this.viewPort.addTickOnce(() => {
+
+    });
   }
 
   protected isoTile(data: MAP_OBJECT, x: number, y: number): Sprite {
@@ -204,12 +206,12 @@ class CityContainer {
     return tile;
   }
 
-  protected build(payload: CityActionTypePayload<BuildActionRequest>): void {
-    const build = this.cityEntity.newBuild(
-      payload.payload.objectType,
-      payload.payload.coordinate
+  protected build(action: ActionType<BuildActionRequest>): void {
+    const build = this.cityCore.newBuild(
+      action.payload.objectType,
+      action.payload.coordinate
     );
-    this.drawOne(build, payload.payload.coordinate, this.renderObject);
+    this.drawOne(build, action.payload.coordinate, this.renderObject);
   }
 
   protected getIso = (absolutePoint: Point): Point => {
