@@ -1,10 +1,15 @@
 import * as _ from "lodash";
-import AssetsLoader from "../../core/assetsLoader/AssetsLoader";
-import { IBaseMapObject, MAP_OBJECT_TYPE } from "../../types/MapEntities";
-import { IConfigState } from "../../core/config/Config.reducer";
-import { ICityState } from "./city.reducer";
-import { IInitCityRequest } from "./types";
+import AssetsLoader from "./assetsLoader/AssetsLoader";
+import { IBaseMapObject, MAP_OBJECT_TYPE } from "../types/MapEntities";
+import { IConfigState } from "./config/config.reducer";
+import { ICityState } from "../containers/city/city.reducer";
+import {
+	IBuildActionRequest,
+	IInitCityRequest,
+} from "../containers/city/types";
+import { injectable } from "inversify";
 
+@injectable()
 class CityCore {
 	protected cityState: ICityState;
 	public terrain: IBaseMapObject[][] = [];
@@ -22,6 +27,24 @@ class CityCore {
 
 		return {
 			...this.cityState,
+		};
+	};
+
+	public buildRequest = (
+		buildRequest: IBuildActionRequest,
+		city: ICityState
+	): ICityState => {
+		const { type, coordinate } = buildRequest;
+
+		city.objects[coordinate.y][coordinate.x] = { // TODO mutable is said
+			x: coordinate.x,
+			y: coordinate.y,
+			type,
+		};
+
+		return {
+			...city,
+			buildRequest,
 		};
 	};
 

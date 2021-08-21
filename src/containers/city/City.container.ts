@@ -5,7 +5,7 @@ import AssetsLoader from "../../core/assetsLoader/AssetsLoader";
 import { StoreType } from "store";
 import { onEvent } from "../../utils/store.subscribe";
 import ViewPort from "../../core/viewPort/ViewPort";
-import { BuildActionRequest, DrawCb } from "./types";
+import { IBuildActionRequest, DrawCb } from "./types";
 import {
   IBaseMapObject,
   MAP_OBJECT,
@@ -13,10 +13,11 @@ import {
 } from "../../types/MapEntities";
 import CityBuild from "../../entities/CityBuild.entity";
 import {
-  BUILD,
+  BUILD_REQUEST,
   RENDER_CITY,
   RE_RENDER_CITY,
   onTerrainClickAction,
+  requestCompletedAction,
 } from "./action";
 import { ActionType } from "../../types/actions";
 import CityLand from "../../entities/CityLand.entity";
@@ -68,7 +69,7 @@ class CityContainer {
     const { subscribe } = this.store;
     subscribe(onEvent(RENDER_CITY, this.render.bind(this)));
     subscribe(onEvent(RE_RENDER_CITY, this.reRender.bind(this)));
-    subscribe(onEvent(BUILD, this.build.bind(this)));
+    subscribe(onEvent(BUILD_REQUEST, this.buildRequest.bind(this)));
   };
 
   protected createMapObject = (object: IBaseMapObject): MAP_OBJECT => {
@@ -173,8 +174,6 @@ class CityContainer {
 
     const position = new Point(isoX, isoY);
     const data = this.createMapObject(item);
-    console.log(this.store.getState());
-    debugger
     fn({ position, data, coordinate });
   };
 
@@ -254,13 +253,17 @@ class CityContainer {
     return tile;
   }
 
-  protected build(action: ActionType<BuildActionRequest>): void {
-    const item: IBaseMapObject = {
-      x: action.payload.coordinate.x,
-      y: action.payload.coordinate.y,
-      type: action.payload.type,
+  protected buildRequest(action: ActionType<IBuildActionRequest>): void {
+    const { city } = this.store.getState();
+    if (city.buildRequest) {
+      const item: IBaseMapObject = {
+        x: action.payload.coordinate.x,
+        y: action.payload.coordinate.y,
+        type: action.payload.type,
+      };
+      this.drawOne(item, action.payload.coordinate, this.renderObject);
+      this.store.dispatch(requestCompletedAction());
     }
-    this.drawOne(item, action.payload.coordinate, this.renderObject);
   }
 
   protected getIso = (absolutePoint: Point): Point => {

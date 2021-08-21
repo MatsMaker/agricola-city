@@ -1,14 +1,17 @@
-import { BuildActionRequest, IInitCityRequest, IsoPoint } from "./types";
-import { ActionType } from '../../types/actions';
+import { IBuildActionRequest, IInitCityRequest, IsoPoint } from "./types";
+import { ActionType } from "../../types/actions";
 
 export const INIT_CITY = "@CONTAINER/City/init_city";
 export const CITY_MODEL_IS_READY = "@CONTAINER/City/city_model_is_ready";
 export const RENDER_CITY = "@CONTAINER/City/render_city";
 export const RE_RENDER_CITY = "@CONTAINER/City/re_render_city";
-export const BUILD = "@CONTAINER/City/build";
+export const BUILD_REQUEST = "@CONTAINER/City/build_request";
+export const REQUEST_COMPLETED = "@CONTAINER/City/request_completed";
 export const ON_TERRAIN_CLICK = "@CONTAINER/City/on_terrain_click";
 
-export function initCity(payload: IInitCityRequest): ActionType<IInitCityRequest> {
+export function initCity(
+	payload: IInitCityRequest
+): ActionType<IInitCityRequest> {
 	return {
 		type: INIT_CITY,
 		payload,
@@ -33,10 +36,18 @@ export function reRenderCityAction(): ActionType {
 	};
 }
 
-export function buildAction(payload: BuildActionRequest): ActionType<BuildActionRequest> {
+export function buildAction(
+	payload: IBuildActionRequest
+): ActionType<IBuildActionRequest> {
 	return {
-		type: BUILD,
+		type: BUILD_REQUEST,
 		payload,
+	};
+}
+
+export function requestCompletedAction(): ActionType {
+	return {
+		type: REQUEST_COMPLETED,
 	};
 }
 

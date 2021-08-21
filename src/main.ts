@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import * as PIXI from "pixi.js";
 import { isDevelopment } from "./utils/build";
-import main from "./main.config";
+import { main } from "./main.config";
 import TYPES from "./types/MainConfig";
 import Game from "./game/Game";
 

@@ -2,9 +2,9 @@ import { MAP_OBJECT_TYPE } from "types/MapEntities";
 import { Point } from "pixi.js";
 import { MAP_OBJECT } from "../../types/MapEntities";
 import { ICityState } from './city.reducer';
-import { IConfigState } from '../../core/config/Config.reducer';
+import { IConfigState } from '../../core/config/config.reducer';
 
-export interface BuildActionRequest {
+export interface IBuildActionRequest {
   type: MAP_OBJECT_TYPE;
   coordinate: Point;
 }
