@@ -11,7 +11,6 @@ import {
   MAP_OBJECT,
   MAP_OBJECT_TYPE,
 } from "../../types/MapEntities";
-import CityBuild from "../../entities/CityBuild.entity";
 import {
   BUILD_REQUEST,
   RENDER_CITY,
@@ -22,7 +21,11 @@ import {
 import { ActionType } from "../../types/actions";
 import CityLand from "../../entities/CityLand.entity";
 import * as _ from "lodash";
-import { IBuildActionRequest } from '../../core/city/types';
+import { IBuildActionRequest } from "../../core/city/types";
+import CityRoad from "../../entities/CityRoad.entity";
+import CityHome from "../../entities/CityHome.entity";
+import CitySenate from "../../entities/CitySenate.entity";
+import CityAltar from "../../entities/CityAltar.entity";
 
 export interface ContainerObject {
   sprite: Sprite;
@@ -87,19 +90,52 @@ class CityContainer {
         mapObject = new CityLand(
           object.x,
           object.y,
-          grasTextures[randomLandTexture],
-          MAP_OBJECT_TYPE.LAND
+          grasTextures[randomLandTexture]
+        );
+
+        break;
+      }
+
+      case MAP_OBJECT_TYPE.ROAD: {
+        const grasTextures = this.assetsLoader.getResource("img/road").textures;
+        const grasTexturesKeys = Object.keys(grasTextures);
+        const randomLandTexture =
+          grasTexturesKeys[_.random(0, grasTexturesKeys.length - 1)];
+
+        mapObject = new CityRoad(
+          object.x,
+          object.y,
+          grasTextures[randomLandTexture]
+        );
+
+        break;
+      }
+
+      case MAP_OBJECT_TYPE.ALTAR: {
+        mapObject = new CityAltar(
+          object.x,
+          object.y,
+          this.getTextureByObjectType(object.type)
         );
 
         break;
       }
 
       case MAP_OBJECT_TYPE.HOME: {
-        mapObject = new CityBuild(
+        mapObject = new CityHome(
           object.x,
           object.y,
-          this.getTextureByObjectType(object.type),
-          object.type
+          this.getTextureByObjectType(object.type)
+        );
+
+        break;
+      }
+
+      case MAP_OBJECT_TYPE.SENATE: {
+        mapObject = new CitySenate(
+          object.x,
+          object.y,
+          this.getTextureByObjectType(object.type)
         );
 
         break;
@@ -114,10 +150,13 @@ class CityContainer {
   protected getTextureByObjectType(type: MAP_OBJECT_TYPE): Texture {
     let fileName: string;
     switch (type) {
+      case MAP_OBJECT_TYPE.ALTAR:
+        fileName = "img/altar";
+        break;
       case MAP_OBJECT_TYPE.HOME:
         fileName = "img/house-2-02";
         break;
-      case MAP_OBJECT_TYPE.SENAT:
+      case MAP_OBJECT_TYPE.SENATE:
         fileName = "img/Senat_02";
       default:
         break;
@@ -200,6 +239,7 @@ class CityContainer {
     const { position, data, coordinate } = drawData;
     const tile = this.isoTile(data, position.x, position.y);
     tile.interactive = true;
+    tile.name = `cityContainer/cityTerrains/${data.type}`;
     tile.on("pointerdown", this.onTerrainClick);
     this.cityTerrains.push({
       sprite: tile,
@@ -211,20 +251,32 @@ class CityContainer {
 
   protected renderObject = (drawData: DrawCb) => {
     const { position, data, coordinate } = drawData;
-    if (data && data instanceof CityBuild) {
-      const isAnchorCoordinate =
-        data.x === coordinate.x && data.y === coordinate.y;
-      if (!isAnchorCoordinate) {
-        return;
+    if (!data) return;
+
+    switch (data.type) {
+      case MAP_OBJECT_TYPE.ROAD:
+      case MAP_OBJECT_TYPE.ALTAR:
+      case MAP_OBJECT_TYPE.HOME:
+      case MAP_OBJECT_TYPE.SENATE: {
+        const isAnchorCoordinate =
+          data.x === coordinate.x && data.y === coordinate.y;
+        if (!isAnchorCoordinate) {
+          return;
+        }
+
+        const tile = this.isoTile(data, position.x, position.y);
+        tile.name = `cityContainer/cityObjects/${data.type}`;
+        this.cityObjects.push({
+          sprite: tile,
+          entity: data,
+          coordinate,
+        });
+        this.container.addChild(tile);
+        break;
       }
 
-      const tile = this.isoTile(data, position.x, position.y);
-      this.cityObjects.push({
-        sprite: tile,
-        entity: data,
-        coordinate,
-      });
-      this.container.addChild(tile);
+      default:
+        break;
     }
   };
 

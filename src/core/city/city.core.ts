@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { IBaseMapObject, MAP_OBJECT_TYPE } from "../../types/MapEntities";
+import { MAP_OBJECT_TYPE } from "../../types/MapEntities";
 import { IConfigState } from "../config/config.reducer";
 import { ICityState } from "./city.reducer";
 import { inject, injectable } from "inversify";
@@ -16,9 +16,6 @@ class CityCore {
 	// start cache data
 	protected cityState: ICityState;
 	protected configState: IConfigState;
-
-	public terrain: IBaseMapObject[][] = [];
-	public objects: IBaseMapObject[][] = [];
 	// end cache data
 
 	constructor(@inject(TYPES.Store) store: StoreType) {

@@ -3,8 +3,9 @@ import { Texture, Sprite, Point } from "pixi.js";
 export enum MAP_OBJECT_TYPE {
 	LAND = "LAND",
 	ROAD = "ROAD",
+	ALTAR = "ALTAR",
 	HOME = "HOME",
-	SENAT = "SENAT",
+	SENATE = "SENATE",
 }
 
 export interface IBaseMapObject {

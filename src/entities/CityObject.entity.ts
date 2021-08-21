@@ -14,11 +14,10 @@ class CityObject implements MAP_OBJECT {
 	public scale: number = 1;
 	public anchor: Point = new Point(0, 1);
 
-	constructor(x: number, y: number, texture: Texture, type: MAP_OBJECT_TYPE) {
+	constructor(x: number, y: number, texture: Texture) {
 		this.x = x;
 		this.y = y;
 		this.texture = texture;
-		this.type = type;
 	}
 }
 
