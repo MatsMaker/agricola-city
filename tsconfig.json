@@ -6,18 +6,10 @@
     "declaration": false,
     "moduleResolution": "node",
     "target": "es6",
-    "types": [
-      "reflect-metadata",
-      "node"
-    ],
-    "typeRoots": [
-      "node_modules/@types"
-    ],
+    "types": ["reflect-metadata", "node"],
+    "typeRoots": ["node_modules/@types"],
     "module": "commonjs",
-    "lib": [
-      "es2017",
-      "dom"
-    ],
+    "lib": ["es2017", "dom"],
     "resolveJsonModule": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
@@ -26,15 +18,9 @@
     "noUnusedParameters": true,
     "baseUrl": "./src/",
     "paths": {
-      "@app/*": [
-        "app/*"
-      ],
-      "@models/*": [
-        "models/*"
-      ],
-      "@assets/*": [
-        "assets/*"
-      ]
+      "@app/*": ["app/*"],
+      "@models/*": ["models/*"],
+      "@assets/*": ["assets/*"]
     }
   }
 }

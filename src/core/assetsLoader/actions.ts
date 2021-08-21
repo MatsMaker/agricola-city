@@ -1,7 +1,7 @@
-import { ASSETS_IS_LOADED, AssetsActionTypes } from './types'
+import { ASSETS_IS_LOADED, AssetsActionTypes } from "./types";
 
 export function assetsIsLoadedAction(): AssetsActionTypes {
-	return {
-		type: ASSETS_IS_LOADED,
-	}
+  return {
+    type: ASSETS_IS_LOADED,
+  };
 }

@@ -3,9 +3,9 @@ import {
   VPActionTypes,
   VIEW_PORT_RESIZE_ACTION,
   ViewPortBaseState,
-} from './types'
-import * as viewPortUtil from './utils'
-import { OrientationType } from '../../types/orientation'
+} from "./types";
+import * as viewPortUtil from "./utils";
+import { OrientationType } from "../../types/orientation";
 
 function getNewViewPortState(): ViewPortBaseState {
   const width = viewPortUtil.getWidth();
@@ -17,7 +17,7 @@ function getNewViewPortState(): ViewPortBaseState {
     height,
     centerWidth: width / 2,
     centerHeight: height / 2,
-  }
+  };
 }
 
 const initialState: ViewPortState = {
@@ -33,7 +33,6 @@ export function viewPortReducer(
   state = initialState,
   action: VPActionTypes
 ): ViewPortState {
-
   switch (action.type) {
     case VIEW_PORT_RESIZE_ACTION: {
       const newViewPortBase = getNewViewPortState();

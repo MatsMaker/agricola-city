@@ -6,7 +6,9 @@ export function waitReRenderViewPort(cb: Function) {
 }
 
 export function getRotation(): OrientationType {
-	return (window.innerHeight > window.innerWidth) ? OrientationType.PORTRAIT : OrientationType.LANDSCAPE
+	return window.innerHeight > window.innerWidth
+		? OrientationType.PORTRAIT
+		: OrientationType.LANDSCAPE;
 }
 
 export function getWidth() {

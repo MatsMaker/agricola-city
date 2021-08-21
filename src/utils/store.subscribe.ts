@@ -1,4 +1,4 @@
-import { store } from '../store';
+import { store } from "../store";
 
 export function onEvent(eventType: string, cb: Function) {
 	return () => {
@@ -6,7 +6,7 @@ export function onEvent(eventType: string, cb: Function) {
 		if (lastEvent.type === eventType) {
 			cb(lastEvent, store);
 		}
-	}
+	};
 }
 
 export function onClearEvent(eventType: string, cb: Function) {
@@ -15,5 +15,5 @@ export function onClearEvent(eventType: string, cb: Function) {
 		if (lastEvent.type === eventType) {
 			cb(lastEvent.payload);
 		}
-	}
+	};
 }

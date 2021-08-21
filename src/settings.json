@@ -1,36 +1,32 @@
 {
-	"assetsPath": "/assets",
-	"assetsList": [
-		"img/altar.png",
-		"img/house-2-02.png",
-		"img/road1.png",
-		"img/Senat_02.png",
-		"img/Tiles.png",
-		"img/bg-prlx-big.jpg",
-		"img/grass.json"
-	],
-	"fonts": {
-		"custom": {
-			"families": [
-				"DRAguSans"
-			],
-			"urls": [
-				"/assets/font/DRAguSans-Black.ttf"
-			]
-		}
-	},
-	"citySize": {
-		"width": 11,
-		"height": 11,
-		"tileWidth": 26,
-		"tileHeight": 26,
-		"distortionFactor": 2
-	},
-	"startCityData": [
-		{
-			"x" : 4,
-			"y": 4,
-			"type": "HOME"
-		}
-	]
+  "assetsPath": "/assets",
+  "assetsList": [
+    "img/altar.png",
+    "img/house-2-02.png",
+    "img/road1.png",
+    "img/Senat_02.png",
+    "img/Tiles.png",
+    "img/bg-prlx-big.jpg",
+    "img/grass.json"
+  ],
+  "fonts": {
+    "custom": {
+      "families": ["DRAguSans"],
+      "urls": ["/assets/font/DRAguSans-Black.ttf"]
+    }
+  },
+  "citySize": {
+    "width": 11,
+    "height": 11,
+    "tileWidth": 26,
+    "tileHeight": 26,
+    "distortionFactor": 2
+  },
+  "startCityData": [
+    {
+      "x": 4,
+      "y": 4,
+      "type": "HOME"
+    }
+  ]
 }
