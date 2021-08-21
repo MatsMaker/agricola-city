@@ -1,5 +1,4 @@
 import { injectable, inject } from "inversify";
-import Config from "../core/config/Config";
 import TYPES from "../types/MainConfig";
 import AssetsLoader from "../core/assetsLoader/AssetsLoader";
 import { StoreType } from "store";
@@ -16,20 +15,17 @@ import { CityActionTypePayload, IsoPoint } from "containers/city/types";
 @injectable()
 class Game {
 	protected store: StoreType;
-	protected config: Config;
 	protected assetsLoader: AssetsLoader;
 	protected startGameStage: StartGameStage;
 	protected viewPort: ViewPort;
 
 	constructor(
 		@inject(TYPES.Store) store: StoreType,
-		@inject(TYPES.Config) config: Config,
 		@inject(TYPES.AssetsLoader) assetsLoader: AssetsLoader,
 		@inject(TYPES.ViewPort) viewPort: ViewPort,
 		@inject(TYPES.StartGameStage) startGameStage: StartGameStage
 	) {
 		this.store = store;
-		this.config = config;
 		this.assetsLoader = assetsLoader;
 		this.viewPort = viewPort;
 		this.startGameStage = startGameStage;

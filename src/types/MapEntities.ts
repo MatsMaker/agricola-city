@@ -7,13 +7,13 @@ export enum MAP_OBJECT_TYPE {
 	SENAT = "SENAT",
 }
 
-export interface BASE_MAP_OBJECT {
+export interface IBaseMapObject {
 	x: number;
 	y: number;
 	type: MAP_OBJECT_TYPE;
 }
 
-export interface MAP_OBJECT extends BASE_MAP_OBJECT {
+export interface MAP_OBJECT extends IBaseMapObject {
 	size: number;
 	texture: Texture;
 	sprite: Sprite;

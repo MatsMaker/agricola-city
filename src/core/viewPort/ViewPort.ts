@@ -8,20 +8,16 @@ import { viewPortResizeAction } from "./actions";
 import { Application, Container, Ticker } from "pixi.js";
 import { onEvent } from "../../utils/store.subscribe";
 import { ViewPortState, VIEW_PORT_RESIZE_ACTION } from "./types";
-import Config from "../../core/config/Config";
 
 @injectable()
 class ViewPort {
 	protected store: StoreType;
 	protected app: Application;
-	protected config: Config;
 
 	constructor(
-		@inject(TYPES.Config) config: Config,
 		@inject(TYPES.Store) store: StoreType,
 		@inject(TYPES.Application) app: Application
 	) {
-		this.config = config;
 		this.store = store;
 		this.app = app;
 		this.init();

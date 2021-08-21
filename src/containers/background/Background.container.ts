@@ -1,7 +1,6 @@
 import { Container, Sprite } from "pixi.js";
 import { injectable, inject } from "inversify";
 import TYPES from "../../types/MainConfig";
-import Config from "../../core/config/Config";
 import AssetsLoader from "../../core/assetsLoader/AssetsLoader";
 import { StoreType } from "store";
 import { onEvent } from "../../utils/store.subscribe";
@@ -11,7 +10,6 @@ import ViewPort from "../../core/viewPort/ViewPort";
 @injectable()
 class BackgroundContainer {
   protected store: StoreType;
-  protected config: Config;
   protected assetsLoader: AssetsLoader;
   protected viewPort: ViewPort;
   protected container: Container;
@@ -19,12 +17,10 @@ class BackgroundContainer {
 
   constructor(
     @inject(TYPES.Store) store: StoreType,
-    @inject(TYPES.Config) config: Config,
     @inject(TYPES.AssetsLoader) assetsLoader: AssetsLoader,
     @inject(TYPES.ViewPort) viewPort: ViewPort
   ) {
     this.store = store;
-    this.config = config;
     this.assetsLoader = assetsLoader;
     this.viewPort = viewPort;
     this.init();

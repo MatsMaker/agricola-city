@@ -1,20 +1,18 @@
-// const initialState: CityState = {
-//   assetsIsLoaded: false,
-// }
+import { MAP_OBJECT } from "../../types/MapEntities";
 
-// export function cityReducer(
-//   state = initialState,
-//   action: CityActionTypes
-// ): CityState {
+export interface ICityState {
+	terrain: MAP_OBJECT[][];
+	objects: MAP_OBJECT[][];
+}
 
-//   switch (action.type) {
-//     case ASSETS_IS_LOADED: {
-//       return {
-//         ...state,
-//         assetsIsLoaded: true,
-//       }
-//     }
-//     default:
-//       return state
-//   }
-// }
+const initialState: ICityState = {
+	terrain: [],
+	objects: [],
+};
+
+export function cityReducer(state = initialState, action: any): ICityState {
+	switch (action.type) {
+		default:
+			return state;
+	}
+}

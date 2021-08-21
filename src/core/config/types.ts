@@ -1,4 +1,4 @@
-export interface AreaSizeType {
+export interface IAreaSizeType {
 	width: number;
 	height: number;
 	tileWidth: number;

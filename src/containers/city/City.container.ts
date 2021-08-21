@@ -1,7 +1,6 @@
 import { Container, Point, Sprite } from "pixi.js";
 import { injectable, inject } from "inversify";
 import TYPES from "../../types/MainConfig";
-import Config from "../../core/config/Config";
 import AssetsLoader from "../../core/assetsLoader/AssetsLoader";
 import { StoreType } from "store";
 import { onEvent } from "../../utils/store.subscribe";
@@ -26,7 +25,6 @@ export interface ContainerObject {
 @injectable()
 class CityContainer {
   protected store: StoreType;
-  protected config: Config;
   protected assetsLoader: AssetsLoader;
   protected viewPort: ViewPort;
   protected container: Container;
@@ -37,12 +35,10 @@ class CityContainer {
 
   constructor(
     @inject(TYPES.Store) store: StoreType,
-    @inject(TYPES.Config) config: Config,
     @inject(TYPES.AssetsLoader) assetsLoader: AssetsLoader,
     @inject(TYPES.ViewPort) viewPort: ViewPort
   ) {
     this.store = store;
-    this.config = config;
     this.assetsLoader = assetsLoader;
     this.viewPort = viewPort;
     this.init();
@@ -72,7 +68,8 @@ class CityContainer {
   };
 
   protected initCity = (): void => {
-    this.cityEntity = new CityEntity(this.config, this.assetsLoader);
+    const { config } = this.store.getState();
+    this.cityEntity = new CityEntity(config, this.assetsLoader);
   };
 
   protected drawMap = (
@@ -80,7 +77,7 @@ class CityContainer {
     fn: (drawData: DrawCb) => void
   ) => {
     const { tileWidth, tileHeight, distortionFactor } =
-      this.config.getCitySize();
+      this.store.getState().config.citySize;
     const { centerWidth } = this.viewPort.getState();
 
     const drawStart: Point = new Point(centerWidth - tileWidth, tileHeight);
@@ -109,7 +106,7 @@ class CityContainer {
     coordinate: Point,
     fn: (drawData: DrawCb) => void
   ) => {
-    const { tileWidth, tileHeight } = this.config.getCitySize();
+    const { tileWidth, tileHeight } = this.store.getState().config.citySize;
     const { centerWidth } = this.viewPort.getState();
 
     const drawStart: Point = new Point(centerWidth - tileWidth, tileHeight);
@@ -217,7 +214,7 @@ class CityContainer {
 
   protected getIso = (absolutePoint: Point): Point => {
     const { width, height, tileWidth, tileHeight, distortionFactor } =
-      this.config.getCitySize();
+      this.store.getState().config.citySize;
     const { centerWidth } = this.viewPort.getState();
 
     const cityWeight = tileWidth * width;
@@ -242,7 +239,7 @@ class CityContainer {
   };
 
   protected getMapCoordinate = (position: Point): Point => {
-    const { tileHeight } = this.config.getCitySize();
+    const { tileHeight } = this.store.getState().config.citySize;
 
     const x = Math.trunc(position.x / tileHeight);
     const y = Math.trunc(position.y / tileHeight);

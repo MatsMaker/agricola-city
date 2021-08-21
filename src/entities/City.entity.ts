@@ -1,18 +1,18 @@
 import * as _ from "lodash";
-import Config from "../core/config/Config";
 import AssetsLoader from "../core/assetsLoader/AssetsLoader";
 import { MAP_OBJECT, MAP_OBJECT_TYPE } from "../types/MapEntities";
 import { Texture, Point } from "pixi.js";
 import CityLand from "./CityLand.entity";
 import CityBuild from "./CityBuild.entity";
+import { IConfigState } from "../core/config/Config.reducer";
 
 class CityEntity {
 	public terrain: MAP_OBJECT[][] = [];
 	public objects: MAP_OBJECT[][] = [];
-	protected config: Config;
+	protected config: IConfigState;
 	protected assetsLoader: AssetsLoader;
 
-	constructor(config: Config, assetsLoader: AssetsLoader) {
+	constructor(config: IConfigState, assetsLoader: AssetsLoader) {
 		this.config = config;
 		this.assetsLoader = assetsLoader;
 	}
@@ -23,7 +23,7 @@ class CityEntity {
 	}
 
 	protected forEachPoints(fn: (x: number, y: number) => void): void {
-		const citySize = this.config.getCitySize();
+		const { citySize } = this.config;
 		for (let y: number = 0; y < citySize.height; y++) {
 			for (let x: number = 0; x < citySize.width; x++) {
 				fn(x, y);
@@ -56,7 +56,7 @@ class CityEntity {
 	}
 
 	protected fillObjectsData(): void {
-		const cityData = this.config.getStartCityData();
+		const { startCityData } = this.config;
 
 		this.forEachPoints((x, y) => {
 			if (!this.objects[y]) {
@@ -67,7 +67,7 @@ class CityEntity {
 			}
 		});
 		this.forEachPoints((x, y) => {
-			const pointData = cityData.find((d) => d.x === x && d.y === y); // TODO need extend for set big size objects
+			const pointData = startCityData.find((d) => d.x === x && d.y === y); // TODO need extend for set big size objects
 			if (pointData) {
 				const build = new CityBuild(
 					x,
