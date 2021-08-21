@@ -8,7 +8,7 @@ import { Application } from "pixi.js";
 import StartGameStage from "./stages/StartGame.stage";
 import BackgroundContainer from "./containers/background/Background.container";
 import CityContainer from "./containers/city/City.container";
-import CityCore from "./core/City.core";
+import CityCore from "./core/city/city.core";
 
 const main = new Container({ defaultScope: "Singleton" });
 main.bind<AssetsLoader>(TYPES.AssetsLoader).to(AssetsLoader);

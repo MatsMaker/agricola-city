@@ -15,7 +15,7 @@ import {
 	initCity,
 	renderCityAction,
 	reRenderCityAction,
-} from "../containers/city/action";
+} from "../core/city/action";
 
 @injectable()
 class StartGameStage {
@@ -47,10 +47,9 @@ class StartGameStage {
 
 	protected initScreen() {
 		const { dispatch } = this.store;
-		const { city, config } = this.store.getState();
 
 		dispatch(initBackgroundAction());
-		dispatch(initCity({ city, config }));
+		dispatch(initCity());
 		dispatch(renderCityAction());
 
 		this.viewPort.addTickOnce(this.initiatedScreen.bind(this));

@@ -1,5 +1,6 @@
-import { IBuildActionRequest, IInitCityRequest, IsoPoint } from "./types";
+import { IsoPoint } from "../../containers/city/types";
 import { ActionType } from "../../types/actions";
+import { IBuildActionRequest } from "./types";
 
 export const INIT_CITY = "@CONTAINER/City/init_city";
 export const CITY_MODEL_IS_READY = "@CONTAINER/City/city_model_is_ready";
@@ -9,12 +10,9 @@ export const BUILD_REQUEST = "@CONTAINER/City/build_request";
 export const REQUEST_COMPLETED = "@CONTAINER/City/request_completed";
 export const ON_TERRAIN_CLICK = "@CONTAINER/City/on_terrain_click";
 
-export function initCity(
-	payload: IInitCityRequest
-): ActionType<IInitCityRequest> {
+export function initCity(): ActionType {
 	return {
 		type: INIT_CITY,
-		payload,
 	};
 }
 

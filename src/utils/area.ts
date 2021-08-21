@@ -8,3 +8,11 @@ export function createMatrix<T>(
 	const row = _.times(sizeWidth, _.constant(aggregate));
 	return _.times(sizeHeight, () => row);
 }
+
+export function mapArea(size: number, cb: (i: number, j: number) => void) {
+	for (let i = 0; i < size; i++) {
+		for (let j = 0; j < size; j++) {
+			cb(i, j);
+		}
+	}
+}

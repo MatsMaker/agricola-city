@@ -5,7 +5,7 @@ import AssetsLoader from "../../core/assetsLoader/AssetsLoader";
 import { StoreType } from "store";
 import { onEvent } from "../../utils/store.subscribe";
 import ViewPort from "../../core/viewPort/ViewPort";
-import { IBuildActionRequest, DrawCb } from "./types";
+import { DrawCb } from "./types";
 import {
   IBaseMapObject,
   MAP_OBJECT,
@@ -18,10 +18,11 @@ import {
   RE_RENDER_CITY,
   onTerrainClickAction,
   requestCompletedAction,
-} from "./action";
+} from "../../core/city/action";
 import { ActionType } from "../../types/actions";
 import CityLand from "../../entities/CityLand.entity";
 import * as _ from "lodash";
+import { IBuildActionRequest } from '../../core/city/types';
 
 export interface ContainerObject {
   sprite: Sprite;
