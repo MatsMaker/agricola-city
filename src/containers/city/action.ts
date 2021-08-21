@@ -1,4 +1,4 @@
-import { BuildActionRequest, IsoPoint } from "./types";
+import { BuildActionRequest, IInitCityRequest, IsoPoint } from "./types";
 import { ActionType } from '../../types/actions';
 
 export const INIT_CITY = "@CONTAINER/City/init_city";
@@ -8,9 +8,10 @@ export const RE_RENDER_CITY = "@CONTAINER/City/re_render_city";
 export const BUILD = "@CONTAINER/City/build";
 export const ON_TERRAIN_CLICK = "@CONTAINER/City/on_terrain_click";
 
-export function initCity(): ActionType {
+export function initCity(payload: IInitCityRequest): ActionType<IInitCityRequest> {
 	return {
 		type: INIT_CITY,
+		payload,
 	};
 }
 
@@ -32,14 +33,14 @@ export function reRenderCityAction(): ActionType {
 	};
 }
 
-export function buildAction(payload: BuildActionRequest) {
+export function buildAction(payload: BuildActionRequest): ActionType<BuildActionRequest> {
 	return {
 		type: BUILD,
 		payload,
 	};
 }
 
-export function onTerrainClickAction(payload: IsoPoint) {
+export function onTerrainClickAction(payload: IsoPoint): ActionType<IsoPoint> {
 	return {
 		type: ON_TERRAIN_CLICK,
 		payload,

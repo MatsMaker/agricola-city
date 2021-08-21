@@ -1,4 +1,4 @@
-import { Container, Point, Sprite } from "pixi.js";
+import { Container, Point, Sprite, Texture } from "pixi.js";
 import { injectable, inject } from "inversify";
 import TYPES from "../../types/MainConfig";
 import AssetsLoader from "../../core/assetsLoader/AssetsLoader";
@@ -6,16 +6,21 @@ import { StoreType } from "store";
 import { onEvent } from "../../utils/store.subscribe";
 import ViewPort from "../../core/viewPort/ViewPort";
 import { BuildActionRequest, DrawCb } from "./types";
-import CityCore from "./City.core";
-import { MAP_OBJECT } from "../../types/MapEntities";
+import {
+  IBaseMapObject,
+  MAP_OBJECT,
+  MAP_OBJECT_TYPE,
+} from "../../types/MapEntities";
 import CityBuild from "../../entities/CityBuild.entity";
 import {
   BUILD,
-  onTerrainClickAction,
   RENDER_CITY,
   RE_RENDER_CITY,
+  onTerrainClickAction,
 } from "./action";
 import { ActionType } from "../../types/actions";
+import CityLand from "../../entities/CityLand.entity";
+import * as _ from "lodash";
 
 export interface ContainerObject {
   sprite: Sprite;
@@ -29,7 +34,6 @@ class CityContainer {
   protected assetsLoader: AssetsLoader;
   protected viewPort: ViewPort;
   protected container: Container;
-  protected cityCore: CityCore;
 
   protected cityTerrains: ContainerObject[] = [];
   protected cityObjects: ContainerObject[] = [];
@@ -52,7 +56,6 @@ class CityContainer {
   protected init = (): void => {
     this.initContainer();
     this.initListeners();
-    this.initCity();
   };
 
   protected initContainer = () => {
@@ -68,13 +71,60 @@ class CityContainer {
     subscribe(onEvent(BUILD, this.build.bind(this)));
   };
 
-  protected initCity = (): void => {
-    const { config } = this.store.getState();
-    this.cityCore = new CityCore(config, this.assetsLoader);
+  protected createMapObject = (object: IBaseMapObject): MAP_OBJECT => {
+    let mapObject: MAP_OBJECT;
+
+    switch (object.type) {
+      case MAP_OBJECT_TYPE.LAND: {
+        const grasTextures =
+          this.assetsLoader.getResource("img/grass").textures;
+        const grasTexturesKeys = Object.keys(grasTextures);
+        const randomLandTexture =
+          grasTexturesKeys[_.random(0, grasTexturesKeys.length - 1)];
+
+        mapObject = new CityLand(
+          object.x,
+          object.y,
+          grasTextures[randomLandTexture],
+          MAP_OBJECT_TYPE.LAND
+        );
+
+        break;
+      }
+
+      case MAP_OBJECT_TYPE.HOME: {
+        mapObject = new CityBuild(
+          object.x,
+          object.y,
+          this.getTextureByObjectType(object.type),
+          object.type
+        );
+
+        break;
+      }
+
+      default:
+        break;
+    }
+    return mapObject;
   };
 
+  protected getTextureByObjectType(type: MAP_OBJECT_TYPE): Texture {
+    let fileName: string;
+    switch (type) {
+      case MAP_OBJECT_TYPE.HOME:
+        fileName = "img/house-2-02";
+        break;
+      case MAP_OBJECT_TYPE.SENAT:
+        fileName = "img/Senat_02";
+      default:
+        break;
+    }
+    return this.assetsLoader.getResource(fileName).texture;
+  }
+
   protected drawMap = (
-    items: MAP_OBJECT[][],
+    items: IBaseMapObject[][],
     fn: (drawData: DrawCb) => void
   ) => {
     const { tileWidth, tileHeight, distortionFactor } =
@@ -86,6 +136,7 @@ class CityContainer {
     let x, y, isoX, isoY;
     for (let i = 0, iL = items.length; i < iL; i++) {
       for (let j = 0, jL = items[i].length; j < jL; j++) {
+        if (!items[i][j]) continue;
         // cartesian 2D coordinate
         x = j * tileWidth;
         y = i * tileHeight;
@@ -94,7 +145,7 @@ class CityContainer {
         isoX = x - y + drawStart.x;
         isoY = (x + y) / distortionFactor + drawStart.y;
 
-        const data = items[i][j];
+        const data = this.createMapObject(items[i][j]);
         const position = new Point(isoX, isoY);
         const coordinate = new Point(j, i);
         fn({ position, data, coordinate });
@@ -103,7 +154,7 @@ class CityContainer {
   };
 
   protected drawOne = (
-    item: MAP_OBJECT,
+    item: IBaseMapObject,
     coordinate: Point,
     fn: (drawData: DrawCb) => void
   ) => {
@@ -121,17 +172,16 @@ class CityContainer {
     const isoY = (x + y) / 2 + drawStart.y;
 
     const position = new Point(isoX, isoY);
-    const data = item;
+    const data = this.createMapObject(item);
+    console.log(this.store.getState());
+    debugger
     fn({ position, data, coordinate });
   };
 
   protected renderContent = () => {
-    this.cityCore.init();
-
-    this.drawMap(this.cityCore.terrain, this.renderTerrain);
-
-    this.drawMap(this.cityCore.objects, this.renderObject);
-
+    const appState = this.store.getState();
+    this.drawMap(appState.city.terrain, this.renderTerrain);
+    this.drawMap(appState.city.objects, this.renderObject);
   };
 
   protected onTerrainClick = (e: any) => {
@@ -188,9 +238,7 @@ class CityContainer {
   }
 
   protected reRender(): void {
-    this.viewPort.addTickOnce(() => {
-
-    });
+    this.viewPort.addTickOnce(() => { });
   }
 
   protected isoTile(data: MAP_OBJECT, x: number, y: number): Sprite {
@@ -207,11 +255,12 @@ class CityContainer {
   }
 
   protected build(action: ActionType<BuildActionRequest>): void {
-    const build = this.cityCore.newBuild(
-      action.payload.objectType,
-      action.payload.coordinate
-    );
-    this.drawOne(build, action.payload.coordinate, this.renderObject);
+    const item: IBaseMapObject = {
+      x: action.payload.coordinate.x,
+      y: action.payload.coordinate.y,
+      type: action.payload.type,
+    }
+    this.drawOne(item, action.payload.coordinate, this.renderObject);
   }
 
   protected getIso = (absolutePoint: Point): Point => {

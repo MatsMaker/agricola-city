@@ -52,7 +52,7 @@ class Game {
 	protected requestToBuild = (request: ActionType<IsoPoint>) => {
 		this.store.dispatch(
 			buildAction({
-				objectType: MAP_OBJECT_TYPE.HOME,
+				type: MAP_OBJECT_TYPE.HOME,
 				coordinate: request.payload.coordinate,
 			})
 		);

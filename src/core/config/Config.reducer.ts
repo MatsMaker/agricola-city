@@ -1,6 +1,6 @@
 import { IBaseMapObject } from "../../types/MapEntities";
 import { SETTINGS_PREPARE } from "./action";
-import { IAreaSizeType } from "./types";
+import { IAreaSizeType, IBuildsSizes } from "./types";
 import * as settings from "../../settings.json";
 import { AnyAction } from "redux";
 
@@ -10,6 +10,7 @@ export interface IConfigState {
 	fonts: any;
 	citySize: IAreaSizeType;
 	startCityData: IBaseMapObject[];
+	buildsSizes: IBuildsSizes;
 }
 
 const initialState: IConfigState = settings as IConfigState;

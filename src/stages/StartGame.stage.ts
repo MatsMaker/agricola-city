@@ -12,6 +12,7 @@ import { initiatedStartGameAction, INIT_START_GAME_STAGE } from "./action";
 import CityContainer from "../containers/city/City.container";
 import { VIEW_PORT_RESIZE_ACTION } from "../core/viewPort/actions";
 import {
+	initCity,
 	renderCityAction,
 	reRenderCityAction,
 } from "../containers/city/action";
@@ -46,8 +47,10 @@ class StartGameStage {
 
 	protected initScreen() {
 		const { dispatch } = this.store;
+		const { city, config } = this.store.getState();
 
 		dispatch(initBackgroundAction());
+		dispatch(initCity({ city, config }));
 		dispatch(renderCityAction());
 
 		this.viewPort.addTickOnce(this.initiatedScreen.bind(this));

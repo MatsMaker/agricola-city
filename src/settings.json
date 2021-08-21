@@ -28,5 +28,11 @@
       "y": 4,
       "type": "HOME"
     }
-  ]
+  ],
+  "buildsSizes": {
+    "LAND": 1,
+    "ROAD": 1,
+    "HOME": 2,
+    "SENAT": 2
+  }
 }

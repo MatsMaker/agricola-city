@@ -1,27 +1,29 @@
 import * as _ from "lodash";
 import AssetsLoader from "../../core/assetsLoader/AssetsLoader";
-import { MAP_OBJECT, MAP_OBJECT_TYPE } from "../../types/MapEntities";
-import { Texture, Point } from "pixi.js";
-import CityLand from "../../entities/CityLand.entity";
-import CityBuild from "../../entities/CityBuild.entity";
+import { IBaseMapObject, MAP_OBJECT_TYPE } from "../../types/MapEntities";
 import { IConfigState } from "../../core/config/Config.reducer";
+import { ICityState } from "./city.reducer";
+import { IInitCityRequest } from "./types";
 
 class CityCore {
-	public terrain: MAP_OBJECT[][] = [];
-	public objects: MAP_OBJECT[][] = [];
+	protected cityState: ICityState;
+	public terrain: IBaseMapObject[][] = [];
+	public objects: IBaseMapObject[][] = [];
 
 	protected config: IConfigState;
 	protected assetsLoader: AssetsLoader;
 
-	constructor(config: IConfigState, assetsLoader: AssetsLoader) {
-		this.config = config;
-		this.assetsLoader = assetsLoader;
-	}
+	public apply = ({ city, config }: IInitCityRequest): ICityState => {
+		this.config = { ...config };
+		this.cityState = { ...city };
 
-	public init(): void {
 		this.fillTerrainData();
 		this.fillObjectsData();
-	}
+
+		return {
+			...this.cityState,
+		};
+	};
 
 	protected forEachPoints(fn: (x: number, y: number) => void): void {
 		const { citySize } = this.config;
@@ -46,63 +48,35 @@ class CityCore {
 	};
 
 	protected fillTerrainData(): void {
-		const grasTextures = this.assetsLoader.getResource("img/grass").textures;
-		const grasTexturesKeys = Object.keys(grasTextures);
-
-		this.terrain = this.createGreed();
+		this.cityState.terrain = this.createGreed();
 		this.forEachPoints((x, y) => {
-			const randomLandTexture =
-				grasTexturesKeys[_.random(0, grasTexturesKeys.length - 1)];
-			this.terrain[y][x] = new CityLand(
+			this.cityState.terrain[y][x] = {
 				x,
 				y,
-				grasTextures[randomLandTexture],
-				MAP_OBJECT_TYPE.LAND
-			);
+				type: MAP_OBJECT_TYPE.LAND,
+			};
 		});
 	}
 
 	protected fillObjectsData(): void {
 		const { startCityData } = this.config;
 
-		this.objects = this.createGreed();
+		this.cityState.objects = this.createGreed();
 		this.forEachPoints((x, y) => {
 			const pointData = startCityData.find((d) => d.x === x && d.y === y); // TODO need extend for set big size objects
 			if (pointData) {
-				const build = new CityBuild(
-					x,
-					y,
-					this.getTextureByObjectType(pointData.type),
-					pointData.type
-				);
-				for (let i = 0; i < build.size; i++) {
-					for (let j = 0; j < build.size; j++) {
-						this.objects[y + i][x + j] = build;
+				const objectSize = this.config.buildsSizes[pointData.type];
+				for (let i = 0; i < objectSize; i++) {
+					for (let j = 0; j < objectSize; j++) {
+						this.cityState.objects[y + i][x + j] = {
+							x,
+							y,
+							type: pointData.type,
+						};
 					}
 				}
 			}
 		});
-	}
-
-	public newBuild = (type: MAP_OBJECT_TYPE, coordinate: Point): CityBuild => {
-		const { x, y } = coordinate;
-		const build = new CityBuild(x, y, this.getTextureByObjectType(type), type);
-		this.objects[y][x] = build;
-		return build;
-	};
-
-	protected getTextureByObjectType(type: MAP_OBJECT_TYPE): Texture {
-		let fileName: string;
-		switch (type) {
-			case MAP_OBJECT_TYPE.HOME:
-				fileName = "img/house-2-02";
-				break;
-			case MAP_OBJECT_TYPE.SENAT:
-				fileName = "img/Senat_02";
-			default:
-				break;
-		}
-		return this.assetsLoader.getResource(fileName).texture;
 	}
 }
 
