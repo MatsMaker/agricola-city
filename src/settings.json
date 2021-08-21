@@ -21,7 +21,10 @@
 	},
 	"citySize": {
 		"width": 11,
-		"height": 11
+		"height": 11,
+		"tileWidth": 26,
+		"tileHeight": 26,
+		"distortionFactor": 2
 	},
 	"startCityData": [
 		{

@@ -1,6 +1,9 @@
 export interface AreaSizeType {
-	width: number,
-	height: number,
+	width: number
+	height: number
+	tileWidth: number
+	tileHeight: number
+	distortionFactor: number
 }
 
 export interface GSettings {

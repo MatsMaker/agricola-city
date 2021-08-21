@@ -23,19 +23,15 @@ export interface ContainerObject {
 class CityContainer {
 
 
-	protected store: StoreType;
-	protected config: Config;
-	protected assetsLoader: AssetsLoader;
-	protected viewPort: ViewPort;
-	protected container: Container;
-	protected cityEntity: CityEntity;
+	protected store: StoreType
+	protected config: Config
+	protected assetsLoader: AssetsLoader
+	protected viewPort: ViewPort
+	protected container: Container
+	protected cityEntity: CityEntity
 
-	protected cityTerrains: ContainerObject[] = [];
-	protected cityObjects: ContainerObject[] = [];
-
-	public tileHeight: number = 26;
-	public tileWidth: number = 26;
-	protected distortionFactor: number = 2
+	protected cityTerrains: ContainerObject[] = []
+	protected cityObjects: ContainerObject[] = []
 
 
 	constructor(
@@ -44,27 +40,27 @@ class CityContainer {
 		@inject(TYPES.AssetsLoader) assetsLoader: AssetsLoader,
 		@inject(TYPES.ViewPort) viewPort: ViewPort
 	) {
-		this.store = store;
-		this.config = config;
-		this.assetsLoader = assetsLoader;
-		this.viewPort = viewPort;
-		this.init();
+		this.store = store
+		this.config = config
+		this.assetsLoader = assetsLoader
+		this.viewPort = viewPort
+		this.init()
 	}
 
 	get view(): Container {
-		return this.container;
+		return this.container
 	}
 
 	protected init = (): void => {
-		this.initContainer();
-		this.initListeners();
-		this.initCity();
+		this.initContainer()
+		this.initListeners()
+		this.initCity()
 	}
 
 	protected initContainer = () => {
-		this.container = new Container();
-		this.container.visible = false;
-		this.container.name = 'city';
+		this.container = new Container()
+		this.container.visible = false
+		this.container.name = 'city'
 	}
 
 	protected initListeners = (): void => {
@@ -79,35 +75,39 @@ class CityContainer {
 	}
 
 	protected drawMap = (items: MAP_OBJECT[][], fn: (drawData: DrawCb) => void) => {
+		const { tileWidth, tileHeight, distortionFactor } = this.config.getCitySize()
+		const { centerWidth } = this.viewPort.getState()
 
-		const drawStart: Point = new Point(this.viewPort.getState().centerWidth - this.tileWidth , this.tileHeight);
+		const drawStart: Point = new Point(centerWidth - tileWidth , tileHeight)
 		
-		let x, y, isoX, isoY;
+		let x, y, isoX, isoY
 		for (let i = 0, iL = items.length; i < iL; i++) {
 			for (let j = 0, jL = items[i].length; j < jL; j++) {
 					// cartesian 2D coordinate
-					x = j * this.tileWidth;
-					y = i * this.tileHeight;
+					x = j * tileWidth
+					y = i * tileHeight
 
 					// iso coordinate
 					isoX = x - y + drawStart.x
-					isoY = (x + y) / this.distortionFactor + drawStart.y
+					isoY = (x + y) / distortionFactor + drawStart.y
 
-					const data = items[i][j];
-					const position = new Point(isoX, isoY);
+					const data = items[i][j]
+					const position = new Point(isoX, isoY)
 					const coordinate = new Point(j, i)
-					fn({ position, data, coordinate });
+					fn({ position, data, coordinate })
 			}
 		}
 	}
 
 	protected drawOne = (item: MAP_OBJECT, coordinate: Point, fn: (drawData: DrawCb) => void) => {
+		const { tileWidth, tileHeight } = this.config.getCitySize()
+		const { centerWidth } = this.viewPort.getState()
 
-		const drawStart: Point = new Point(this.viewPort.getState().centerWidth - this.tileWidth , this.tileHeight);
+		const drawStart: Point = new Point(centerWidth - tileWidth , tileHeight)
 
 		// cartesian 2D coordinate
-		const x = coordinate.x * this.tileWidth;
-		const y = coordinate.y * this.tileHeight;
+		const x = coordinate.x * tileWidth;
+		const y = coordinate.y * tileHeight;
 
 		// iso coordinate
 		const isoX = x - y + drawStart.x
@@ -143,7 +143,6 @@ class CityContainer {
 			coordinate,
 		}))
 	}
-
 
 	protected renderTerrain = (drawData: DrawCb) => {
 		const { position, data, coordinate } = drawData
@@ -190,37 +189,37 @@ class CityContainer {
 	}
 
 	protected isoTile(data: MAP_OBJECT, x: number, y: number): Sprite {
-			const tile = new Sprite(data.texture);
-			tile.position.x = x + data.offsetX;
-			tile.position.y = y + data.offsetY;
+			const tile = new Sprite(data.texture)
+			tile.position.x = x + data.offsetX
+			tile.position.y = y + data.offsetY
 
 			// bottom-left
-			tile.anchor.x = data.anchor.x;
-			tile.anchor.y = data.anchor.y;
-			tile.scale.set(data.scale, data.scale);
+			tile.anchor.x = data.anchor.x
+			tile.anchor.y = data.anchor.y
+			tile.scale.set(data.scale, data.scale)
 	
 			return tile;
 	}
 
 	protected build(payload: CityActionTypePayload<BuildActionRequest>): void {
-		const build = this.cityEntity.newBuild(payload.payload.objectType, payload.payload.coordinate);
+		const build = this.cityEntity.newBuild(payload.payload.objectType, payload.payload.coordinate)
 		this.drawOne(
 			build,
 			payload.payload.coordinate,
-			this.renderObject
+			this.renderObject,
 		)
 	}
 
 	protected getIso = (absolutePoint: Point): Point => {
-		const {centerWidth } = this.viewPort.getState();
-		const citySize = this.config.getCitySize()
-		const cityWeight = this.tileWidth * citySize.width
-		const cityHeight = this.tileHeight * citySize.height
-		const distortionFactor = 2
-		const RB1Size = citySize.width * this.tileWidth
+		const { width, height, tileWidth, tileHeight, distortionFactor } = this.config.getCitySize()
+		const { centerWidth } = this.viewPort.getState()
 
-		const R = new Point(centerWidth, (citySize.height * this.tileHeight) / distortionFactor)
-		const A1 = new Point(R.x, R.y - (cityHeight / this.distortionFactor))
+		const cityWeight = tileWidth * width
+		const cityHeight = tileHeight * height
+		const RB1Size = width * tileWidth
+
+		const R = new Point(centerWidth, (height * tileHeight) / distortionFactor)
+		const A1 = new Point(R.x, R.y - (cityHeight / distortionFactor))
 		const B1 = new Point(centerWidth + RB1Size, R.y)
 		const D1 = new Point(R.x - cityWeight, R.y)
 		const RA1Size = R.y
@@ -228,7 +227,7 @@ class CityContainer {
 		const D1B1Size = RB1Size * 2
 
 		const correlationX = D1B1Size / cityWeight
-		const correlationY = A1C1Size / (cityHeight / this.distortionFactor)
+		const correlationY = A1C1Size / (cityHeight / distortionFactor)
 
 		const isoX = distancePointToLIne(D1, A1, absolutePoint) / correlationX
 		const isoY = distancePointToLIne(A1, B1, absolutePoint) / correlationY
@@ -237,8 +236,10 @@ class CityContainer {
 	}
 
 	protected getMapCoordinate = (position: Point): Point => {
-		const x = Math.trunc(position.x / this.tileHeight)
-		const y = Math.trunc(position.y / this.tileHeight)
+		const { tileHeight } = this.config.getCitySize()
+
+		const x = Math.trunc(position.x / tileHeight)
+		const y = Math.trunc(position.y / tileHeight)
 		return new Point(x, y);
 	}
 
