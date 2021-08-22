@@ -27,6 +27,7 @@
     "pixi.js": "^5.1.5",
     "redux": "^3.7.2",
     "reflect-metadata": "^0.1.13",
+    "screenfull": "^5.1.0",
     "three-orbitcontrols": "^2.108.1",
     "webfontloader": "^1.6.28"
   },

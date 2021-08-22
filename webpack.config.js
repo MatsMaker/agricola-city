@@ -29,7 +29,7 @@ module.exports = {
         use: ["style-loader", "css-loader"],
       },
       {
-        test: /\.(png|svg|jpg|jpeg|gif)$/,
+        test: /\.(png|svg|jpg|jpeg|gif|ico)$/,
         use: ["file-loader"],
       },
     ],
@@ -40,6 +40,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: "src/index.html",
+      favicon: "./src/assets/icon/favicon.ico",
     }),
     new CopyWebpackPlugin([{ from: "src/assets", to: "assets" }]),
   ],
