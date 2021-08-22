@@ -6,7 +6,7 @@ import { StoreType } from "store";
 import { onEvent } from "../../utils/store.subscribe";
 import ViewPort from "../../core/viewPort/ViewPort";
 import { DrawCb } from "./types";
-import { IBaseMapObject, MAP_OBJECT } from "../../types/MapEntities";
+import { IBaseMapObject, IViewObject } from "../../types/MapEntities";
 import {
   BUILD_REQUEST,
   RENDER_CITY,
@@ -19,9 +19,9 @@ import * as _ from "lodash";
 import { IBuildActionRequest } from "../../core/city/types";
 import ObjectsGenerator from "../objectsGenerator/ObjectsGenerator.container";
 
-export interface ContainerObject {
+export interface CityItem {
   sprite: Sprite;
-  entity: MAP_OBJECT;
+  entity: IViewObject;
   coordinate: Point;
 }
 
@@ -33,8 +33,8 @@ class CityContainer {
   protected viewPort: ViewPort;
   protected container: Container;
 
-  protected cityTerrains: ContainerObject[] = [];
-  protected cityObjects: ContainerObject[] = [];
+  protected cityTerrains: CityItem[] = [];
+  protected cityObjects: CityItem[] = [];
 
   constructor(
     @inject(TYPES.Store) store: StoreType,

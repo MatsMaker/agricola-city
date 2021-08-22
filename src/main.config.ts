@@ -11,15 +11,19 @@ import CityContainer from "./containers/city/City.container";
 import CityCore from "./core/city/city.core";
 import app from "./app";
 import ObjectsGenerator from './containers/objectsGenerator/ObjectsGenerator.container';
+import MainBarContainer from "./containers/mainBar/MainBar.container";
 
 const main = new Container({ defaultScope: "Singleton" });
+
+// main
+// 	.bind<BackgroundContainer>(TYPES.BackgroundContainer)
+// 	.to(BackgroundContainer);
+
 main.bind<AssetsLoader>(TYPES.AssetsLoader).to(AssetsLoader);
 main.bind<StoreType>(TYPES.Store).toConstantValue(store);
 main.bind<ObjectsGenerator>(TYPES.ObjectsGenerator).to(ObjectsGenerator);
 main.bind<Application>(TYPES.Application).toConstantValue(app);
-// main
-// 	.bind<BackgroundContainer>(TYPES.BackgroundContainer)
-// 	.to(BackgroundContainer);
+main.bind<MainBarContainer>(TYPES.MainBarContainer).to(MainBarContainer);
 main.bind<CityContainer>(TYPES.CityContainer).to(CityContainer);
 main.bind<CityCore>(TYPES.CityCore).to(CityCore);
 main.bind<StartGameStage>(TYPES.StartGameStage).to(StartGameStage);

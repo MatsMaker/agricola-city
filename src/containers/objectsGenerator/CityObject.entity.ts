@@ -1,7 +1,7 @@
-import { MAP_OBJECT, MAP_OBJECT_TYPE } from "../types/MapEntities";
+import { MAP_OBJECT_TYPE, IViewObject } from "../../types/MapEntities";
 import { Texture, Sprite, Point } from "pixi.js";
 
-class CityObject implements MAP_OBJECT {
+class CityObject implements IViewObject {
 	public x: number;
 	public y: number;
 	public type: MAP_OBJECT_TYPE;

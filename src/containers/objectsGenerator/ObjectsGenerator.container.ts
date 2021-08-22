@@ -1,21 +1,25 @@
 import * as _ from "lodash";
 import {
 	IBaseMapObject,
-	MAP_OBJECT,
+	IViewObject,
 	MAP_OBJECT_TYPE,
 } from "../../types/MapEntities";
-import { Sprite, Texture } from "pixi.js";
-import { DrawCb } from "containers/city/types";
+import { Point, Sprite, Texture } from "pixi.js";
 import AssetsLoader from "../../core/assetsLoader/AssetsLoader";
 import { injectable } from "inversify";
 import { inject } from "inversify";
 import TYPES from "../../types/MainConfig";
-import CityLand from "../../entities/CityLand.entity";
-import CityRoad from "../../entities/CityRoad.entity";
-import CityAltar from "../../entities/CityAltar.entity";
-import CityHome from "../../entities/CityHome.entity";
-import CitySenate from "../../entities/CitySenate.entity";
+import CityLand from "./CityLand.entity";
+import CityRoad from "./CityRoad.entity";
+import CityAltar from "./CityAltar.entity";
+import CityHome from "./CityHome.entity";
+import CitySenate from "./CitySenate.entity";
+import { DrawBaseCb } from "../../containers/city/types";
 
+export interface Item {
+	sprite: Sprite;
+	entity: IViewObject;
+}
 @injectable()
 export default class ObjectsGenerator {
 	protected assetsLoader: AssetsLoader;
@@ -23,33 +27,21 @@ export default class ObjectsGenerator {
 	constructor(@inject(TYPES.AssetsLoader) assetsLoader: AssetsLoader) {
 		this.assetsLoader = assetsLoader;
 	}
-	public renderObject = (drawData: DrawCb): Sprite => {
-		const { position, data } = drawData;
-		if (!data) return;
-		let tile;
-		switch (data.type) {
-			case MAP_OBJECT_TYPE.ROAD:
-			case MAP_OBJECT_TYPE.ALTAR:
-			case MAP_OBJECT_TYPE.HOME:
-			case MAP_OBJECT_TYPE.SENATE: {
-				tile = this.isoTile(data, position.x, position.y);
-				break;
-			}
 
-			default:
-				break;
-		}
-		return tile;
+	public creteItem = (object: IBaseMapObject): Item => {
+		const viewObject = this.createMapObject(object);
+		const sprite = this.renderObject({
+			position: new Point(object.x, object.y),
+			data: viewObject,
+		});
+		return {
+			sprite,
+			entity: viewObject,
+		};
 	};
 
-	public renderTerrain = (drawData: DrawCb): Sprite => {
-		const { position, data } = drawData;
-		const tile = this.isoTile(data, position.x, position.y);
-		return tile;
-	};
-
-	public createMapObject = (object: IBaseMapObject): MAP_OBJECT => {
-		let mapObject: MAP_OBJECT;
+	public createMapObject = (object: IBaseMapObject): IViewObject => {
+		let mapObject: IViewObject;
 
 		switch (object.type) {
 			case MAP_OBJECT_TYPE.LAND: {
@@ -119,6 +111,31 @@ export default class ObjectsGenerator {
 		return mapObject;
 	};
 
+	public renderObject = (drawData: DrawBaseCb): Sprite => {
+		const { position, data } = drawData;
+		if (!data) return;
+		let tile;
+		switch (data.type) {
+			case MAP_OBJECT_TYPE.ROAD:
+			case MAP_OBJECT_TYPE.ALTAR:
+			case MAP_OBJECT_TYPE.HOME:
+			case MAP_OBJECT_TYPE.SENATE: {
+				tile = this.isoTile(data, position.x, position.y);
+				break;
+			}
+
+			default:
+				break;
+		}
+		return tile;
+	};
+
+	public renderTerrain = (drawData: DrawBaseCb): Sprite => {
+		const { position, data } = drawData;
+		const tile = this.isoTile(data, position.x, position.y);
+		return tile;
+	};
+
 	protected getTextureByObjectType(type: MAP_OBJECT_TYPE): Texture {
 		let fileName: string;
 		switch (type) {
@@ -136,7 +153,7 @@ export default class ObjectsGenerator {
 		return this.assetsLoader.getResource(fileName).texture;
 	}
 
-	protected isoTile(data: MAP_OBJECT, x: number, y: number): Sprite {
+	protected isoTile(data: IViewObject, x: number, y: number): Sprite {
 		const tile = new Sprite(data.texture);
 		tile.position.x = x + data.offsetX;
 		tile.position.y = y + data.offsetY;

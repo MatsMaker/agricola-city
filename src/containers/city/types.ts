@@ -1,13 +1,15 @@
 import { Point } from "pixi.js";
-import { MAP_OBJECT } from "../../types/MapEntities";
+import { IViewObject } from "../../types/MapEntities";
 
 export interface IsoPoint {
   position: Point;
   coordinate: Point;
 }
 
-export interface DrawCb {
+export interface DrawBaseCb {
   position: Point;
-  data: MAP_OBJECT;
+  data: IViewObject;
+}
+export interface DrawCb extends DrawBaseCb {
   coordinate: Point;
 }

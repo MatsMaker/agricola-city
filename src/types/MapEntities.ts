@@ -14,7 +14,7 @@ export interface IBaseMapObject {
 	type: MAP_OBJECT_TYPE;
 }
 
-export interface MAP_OBJECT extends IBaseMapObject {
+export interface IViewObject extends IBaseMapObject {
 	size: number;
 	texture: Texture;
 	sprite: Sprite;

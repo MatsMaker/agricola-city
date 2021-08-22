@@ -1,7 +1,7 @@
-import CityObject from "./CityObject.entity";
-import { MAP_OBJECT_TYPE, MAP_OBJECT } from "../types/MapEntities";
+import { MAP_OBJECT_TYPE, IViewObject } from "../../types/MapEntities";
+import CityObject from './CityObject.entity';
 
-class CityAltar extends CityObject implements MAP_OBJECT {
+class CityAltar extends CityObject implements IViewObject {
 	public offsetX: number = -13;
 	// public offsetY: number = 0;
 	public scale: number = 0.3;

@@ -16,6 +16,7 @@ import {
 	renderCityAction,
 	reRenderCityAction,
 } from "../core/city/action";
+import MainBarContainer from "../containers/mainBar/MainBar.container";
 
 @injectable()
 class StartGameStage {
@@ -24,17 +25,20 @@ class StartGameStage {
 
 	// protected backgroundContainer: BackgroundContainer;
 	protected cityContainer: CityContainer;
+	protected mainBarContainer: MainBarContainer;
 
 	constructor(
 		@inject(TYPES.Store) store: StoreType,
 		@inject(TYPES.ViewPort) viewPort: ViewPort,
 		// @inject(TYPES.BackgroundContainer) backgroundContainer: BackgroundContainer,
-		@inject(TYPES.CityContainer) cityContainer: CityContainer
+		@inject(TYPES.CityContainer) cityContainer: CityContainer,
+		@inject(TYPES.MainBarContainer) mainBarContainer: MainBarContainer
 	) {
 		this.store = store;
 		this.viewPort = viewPort;
 		// this.backgroundContainer = backgroundContainer;
 		this.cityContainer = cityContainer;
+		this.mainBarContainer = mainBarContainer;
 		this.initListeners();
 	}
 

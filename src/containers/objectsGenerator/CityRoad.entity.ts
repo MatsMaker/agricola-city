@@ -1,7 +1,7 @@
 import CityObject from "./CityObject.entity";
-import { MAP_OBJECT, MAP_OBJECT_TYPE } from "../types/MapEntities";
+import { IViewObject, MAP_OBJECT_TYPE } from "../../types/MapEntities";
 
-class CityRoad extends CityObject implements MAP_OBJECT {
+class CityRoad extends CityObject implements IViewObject {
 	public type: MAP_OBJECT_TYPE = MAP_OBJECT_TYPE.ROAD;
 	public scale: number = 0.36;
 }
