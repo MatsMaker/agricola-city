@@ -7,9 +7,8 @@ import TYPES from "../../types/MainConfig";
 import { MAP_OBJECT_TYPE } from "../../types/MapEntities";
 import { RENDER_CITY, RE_RENDER_CITY } from "../../core/city/action";
 import { onEvent } from "../../utils/store.subscribe";
-import ObjectsGenerator, {
-	Item,
-} from "../objectsGenerator/ObjectsGenerator.container";
+import ObjectsGenerator, { Item } from "../../core/ObjectsGenerator.container";
+import { forEach } from "lodash";
 
 @injectable()
 class MainBarContainer {
@@ -47,15 +46,23 @@ class MainBarContainer {
 		const { viewPort } = this.store.getState();
 
 		const menuBottomLine = viewPort.height;
-		const menuMarginLeft = 64;
-		const menuPosition = new Point(menuMarginLeft, menuBottomLine);
-		const item = this.objectsGenerator.creteItem({
-			x: menuPosition.x,
-			y: menuPosition.y,
-			type: MAP_OBJECT_TYPE.HOME,
+		const menuMarginLeft = 96;
+		const menuPosition = new Point(32, menuBottomLine);
+		const buttonsKeys: MAP_OBJECT_TYPE[] = [
+			MAP_OBJECT_TYPE.BUTTON_ROAD,
+			MAP_OBJECT_TYPE.BUTTON_HOME,
+			MAP_OBJECT_TYPE.BUTTON_SENATE,
+			MAP_OBJECT_TYPE.BUTTON_OFF,
+		];
+		forEach(buttonsKeys, (type: MAP_OBJECT_TYPE, i: number) => {
+			const item = this.objectsGenerator.creteItem({
+				x: menuPosition.x + menuMarginLeft * i,
+				y: menuPosition.y,
+				type: type,
+			});
+			this.buttons.set(type, item);
+			this.container.addChild(item.sprite);
 		});
-		this.buttons.set(MAP_OBJECT_TYPE.HOME, item);
-		this.container.addChild(item.sprite);
 	}
 
 	protected render(): void {

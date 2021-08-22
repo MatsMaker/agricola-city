@@ -3,18 +3,19 @@ import {
 	IBaseMapObject,
 	IViewObject,
 	MAP_OBJECT_TYPE,
-} from "../../types/MapEntities";
+} from "../types/MapEntities";
 import { Point, Sprite, Texture } from "pixi.js";
-import AssetsLoader from "../../core/assetsLoader/AssetsLoader";
+import AssetsLoader from "./assetsLoader/AssetsLoader";
 import { injectable } from "inversify";
 import { inject } from "inversify";
-import TYPES from "../../types/MainConfig";
-import CityLand from "./CityLand.entity";
-import CityRoad from "./CityRoad.entity";
-import CityAltar from "./CityAltar.entity";
-import CityHome from "./CityHome.entity";
-import CitySenate from "./CitySenate.entity";
-import { DrawBaseCb } from "../../containers/city/types";
+import TYPES from "../types/MainConfig";
+import CityLand from "../containers/objectsGenerator/CityLand.entity";
+import CityRoad from "../containers/objectsGenerator/CityRoad.entity";
+import CityAltar from "../containers/objectsGenerator/CityAltar.entity";
+import CityHome from "../containers/objectsGenerator/CityHome.entity";
+import CitySenate from "../containers/objectsGenerator/CitySenate.entity";
+import { DrawBaseCb } from "../containers/city/types";
+import ButtonEntity from "../containers/mainBar/Button.entity";
 
 export interface Item {
 	sprite: Sprite;
@@ -105,6 +106,20 @@ export default class ObjectsGenerator {
 				break;
 			}
 
+			case MAP_OBJECT_TYPE.BUTTON_ROAD:
+			case MAP_OBJECT_TYPE.BUTTON_HOME:
+			case MAP_OBJECT_TYPE.BUTTON_SENATE:
+			case MAP_OBJECT_TYPE.BUTTON_OFF: {
+				mapObject = new ButtonEntity(
+					object.x,
+					object.y,
+					this.getTextureByObjectType(object.type)
+				);
+				mapObject.type = object.type;
+
+				break;
+			}
+
 			default:
 				break;
 		}
@@ -119,7 +134,11 @@ export default class ObjectsGenerator {
 			case MAP_OBJECT_TYPE.ROAD:
 			case MAP_OBJECT_TYPE.ALTAR:
 			case MAP_OBJECT_TYPE.HOME:
-			case MAP_OBJECT_TYPE.SENATE: {
+			case MAP_OBJECT_TYPE.SENATE:
+			case MAP_OBJECT_TYPE.BUTTON_HOME:
+			case MAP_OBJECT_TYPE.BUTTON_SENATE:
+			case MAP_OBJECT_TYPE.BUTTON_ROAD:
+			case MAP_OBJECT_TYPE.BUTTON_OFF: {
 				tile = this.isoTile(data, position.x, position.y);
 				break;
 			}
@@ -147,6 +166,18 @@ export default class ObjectsGenerator {
 				break;
 			case MAP_OBJECT_TYPE.SENATE:
 				fileName = "img/Senat_02";
+				break;
+			case MAP_OBJECT_TYPE.BUTTON_ROAD:
+				fileName = "img/btn-road";
+				break;
+			case MAP_OBJECT_TYPE.BUTTON_HOME:
+				fileName = "img/btn-home";
+				break;
+			case MAP_OBJECT_TYPE.BUTTON_SENATE:
+				fileName = "img/btn-senate";
+				break;
+			case MAP_OBJECT_TYPE.BUTTON_OFF:
+				fileName = "img/btn-off";
 			default:
 				break;
 		}

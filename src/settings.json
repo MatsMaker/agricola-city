@@ -6,6 +6,10 @@
     "img/Senat_02.png",
     "img/Tiles.png",
     "img/road.json",
+    "img/btn-road.png",
+    "img/btn-home.png",
+    "img/btn-off.png",
+    "img/btn-senate.png",
     "img/grass.json"
   ],
   "fonts": {

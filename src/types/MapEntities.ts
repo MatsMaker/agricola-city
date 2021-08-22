@@ -6,6 +6,10 @@ export enum MAP_OBJECT_TYPE {
 	ALTAR = "ALTAR",
 	HOME = "HOME",
 	SENATE = "SENATE",
+	BUTTON_ROAD = "BUTTON_ROAD",
+	BUTTON_HOME = "BUTTON_HOME",
+	BUTTON_SENATE = "BUTTON_SENATE",
+	BUTTON_OFF = "BUTTON_OFF",
 }
 
 export interface IBaseMapObject {

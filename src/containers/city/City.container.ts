@@ -17,7 +17,7 @@ import {
 import { ActionType } from "../../types/actions";
 import * as _ from "lodash";
 import { IBuildActionRequest } from "../../core/city/types";
-import ObjectsGenerator from "../objectsGenerator/ObjectsGenerator.container";
+import ObjectsGenerator from "../../core/ObjectsGenerator.container";
 
 export interface CityItem {
   sprite: Sprite;
