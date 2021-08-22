@@ -9,10 +9,11 @@ import { DrawCb } from "./types";
 import { IBaseMapObject, IViewObject } from "../../types/MapEntities";
 import {
   BUILD_REQUEST,
-  RENDER_CITY,
   RE_RENDER_CITY,
   onTerrainClickAction,
   requestCompletedAction,
+  INIT_CITY,
+  RESET_CITY,
 } from "../../core/city/action";
 import { ActionType } from "../../types/actions";
 import * as _ from "lodash";
@@ -58,15 +59,24 @@ class CityContainer {
     this.initListeners();
   };
 
+  protected resetCity = (): void => {
+    this.container.removeChildren();
+    this.render();
+  };
+
   protected initContainer = () => {
     this.container = new Container();
     this.container.visible = false;
     this.container.name = "city";
+
+    const { scene } = this.viewPort;
+    scene.addChild(this.view);
   };
 
   protected initListeners = (): void => {
     const { subscribe } = this.store;
-    subscribe(onEvent(RENDER_CITY, this.render.bind(this)));
+    subscribe(onEvent(INIT_CITY, this.render.bind(this)));
+    subscribe(onEvent(RESET_CITY, this.resetCity.bind(this)));
     subscribe(onEvent(RE_RENDER_CITY, this.reRender.bind(this)));
     subscribe(onEvent(BUILD_REQUEST, this.buildRequest.bind(this)));
   };
@@ -175,8 +185,6 @@ class CityContainer {
   protected render(): void {
     this.viewPort.addTickOnce(() => {
       this.renderContent();
-      const { scene } = this.viewPort;
-      scene.addChild(this.view);
       this.container.interactive = true;
       this.container.on("pointerdown", this.onTerrainClick);
       this.container.visible = true;

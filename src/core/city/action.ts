@@ -2,13 +2,13 @@ import { IsoPoint } from "../../containers/city/types";
 import { ActionType } from "../../types/actions";
 import { IBuildActionRequest } from "./types";
 
-export const INIT_CITY = "@CONTAINER/City/init_city";
-export const CITY_MODEL_IS_READY = "@CONTAINER/City/city_model_is_ready";
-export const RENDER_CITY = "@CONTAINER/City/render_city";
-export const RE_RENDER_CITY = "@CONTAINER/City/re_render_city";
-export const BUILD_REQUEST = "@CONTAINER/City/build_request";
-export const REQUEST_COMPLETED = "@CONTAINER/City/request_completed";
-export const ON_TERRAIN_CLICK = "@CONTAINER/City/on_terrain_click";
+export const INIT_CITY = "@CORE/City/init_city";
+export const RESET_CITY = "@CORE/City/reset";
+export const CITY_MODEL_IS_READY = "@CORE/City/city_model_is_ready";
+export const RE_RENDER_CITY = "@CORE/City/re_render_city";
+export const BUILD_REQUEST = "@CORE/City/build_request";
+export const REQUEST_COMPLETED = "@CORE/City/request_completed";
+export const ON_TERRAIN_CLICK = "@CORE/City/on_terrain_click";
 
 export function initCity(): ActionType {
 	return {
@@ -16,15 +16,15 @@ export function initCity(): ActionType {
 	};
 }
 
-export function cityModelIsReady(): ActionType {
+export function resetCity(): ActionType {
 	return {
-		type: CITY_MODEL_IS_READY,
+		type: RESET_CITY,
 	};
 }
 
-export function renderCityAction(): ActionType {
+export function cityModelIsReady(): ActionType {
 	return {
-		type: RENDER_CITY,
+		type: CITY_MODEL_IS_READY,
 	};
 }
 

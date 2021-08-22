@@ -3,15 +3,20 @@ import TYPES from "../types/MainConfig";
 import { StoreType } from "../store";
 import ViewPort from "../core/viewPort/ViewPort";
 import { onEvent } from "../utils/store.subscribe";
-import { initiatedStartGameAction, INIT_START_GAME_STAGE } from "./action";
+import {
+	initiatedStartGameAction,
+	INIT_START_GAME_STAGE,
+	RESET_GAME_STAGE,
+} from "./action";
 import CityContainer from "../containers/city/City.container";
 import { VIEW_PORT_RESIZE_ACTION } from "../core/viewPort/actions";
 import {
 	initCity,
-	renderCityAction,
 	reRenderCityAction,
+	resetCity,
 } from "../core/city/action";
 import MainBarContainer from "../containers/mainBar/MainBar.container";
+import { initMainMenu } from '../containers/mainBar/action';
 
 @injectable()
 class StartGameStage {
@@ -45,8 +50,15 @@ class StartGameStage {
 		const { dispatch } = this.store;
 
 		dispatch(initCity());
-		dispatch(renderCityAction());
+		dispatch(initMainMenu());
 
+		this.viewPort.addTickOnce(this.initiatedScreen.bind(this));
+	}
+
+	protected resetScreen() {
+		const { dispatch } = this.store;
+
+		dispatch(resetCity());
 		this.viewPort.addTickOnce(this.initiatedScreen.bind(this));
 	}
 
@@ -58,6 +70,7 @@ class StartGameStage {
 			})
 		);
 		subscribe(onEvent(INIT_START_GAME_STAGE, this.initScreen.bind(this)));
+		subscribe(onEvent(RESET_GAME_STAGE, this.resetScreen.bind(this)));
 	}
 }
 

@@ -5,10 +5,11 @@ import AssetsLoader from "../../core/assetsLoader/AssetsLoader";
 import { StoreType } from "store";
 import TYPES from "../../types/MainConfig";
 import { MAP_OBJECT_TYPE } from "../../types/MapEntities";
-import { RENDER_CITY, RE_RENDER_CITY } from "../../core/city/action";
 import { onEvent } from "../../utils/store.subscribe";
 import ObjectsGenerator, { Item } from "../../core/ObjectsGenerator.container";
 import { forEach } from "lodash";
+import { INIT_MAIN_MENU, mainBarButtonClickAction } from "./action";
+import { BUTTONS_TYPE } from "./type";
 
 @injectable()
 class MainBarContainer {
@@ -38,8 +39,7 @@ class MainBarContainer {
 
 	protected initListeners = (): void => {
 		const { subscribe } = this.store;
-		subscribe(onEvent(RENDER_CITY, this.render.bind(this)));
-		subscribe(onEvent(RE_RENDER_CITY, this.reRender.bind(this)));
+		subscribe(onEvent(INIT_MAIN_MENU, this.render.bind(this)));
 	};
 
 	protected renderContent(): void {
@@ -61,6 +61,33 @@ class MainBarContainer {
 				type: type,
 			});
 			this.buttons.set(type, item);
+			item.sprite.interactive = true;
+			item.sprite.name = type;
+			item.sprite.on("pointerdown", () => {
+				let buttonType: BUTTONS_TYPE;
+				switch (type) {
+					case MAP_OBJECT_TYPE.BUTTON_ROAD:
+						buttonType = BUTTONS_TYPE.ROAD;
+						break;
+					case MAP_OBJECT_TYPE.BUTTON_HOME:
+						buttonType = BUTTONS_TYPE.HOME;
+						break;
+					case MAP_OBJECT_TYPE.BUTTON_SENATE:
+						buttonType = BUTTONS_TYPE.SENATE;
+						break;
+					case MAP_OBJECT_TYPE.BUTTON_OFF:
+						buttonType = BUTTONS_TYPE.RESET;
+						break;
+
+					default:
+						break;
+				}
+				this.store.dispatch(
+					mainBarButtonClickAction({
+						buttonType,
+					})
+				);
+			});
 			this.container.addChild(item.sprite);
 		});
 	}
