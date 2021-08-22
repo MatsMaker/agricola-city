@@ -10,10 +10,12 @@ import StartGameStage from "./stages/StartGame.stage";
 import CityContainer from "./containers/city/City.container";
 import CityCore from "./core/city/city.core";
 import app from "./app";
+import ObjectsGenerator from './containers/objectsGenerator/ObjectsGenerator.container';
 
 const main = new Container({ defaultScope: "Singleton" });
 main.bind<AssetsLoader>(TYPES.AssetsLoader).to(AssetsLoader);
 main.bind<StoreType>(TYPES.Store).toConstantValue(store);
+main.bind<ObjectsGenerator>(TYPES.ObjectsGenerator).to(ObjectsGenerator);
 main.bind<Application>(TYPES.Application).toConstantValue(app);
 // main
 // 	.bind<BackgroundContainer>(TYPES.BackgroundContainer)
