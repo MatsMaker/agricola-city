@@ -4,20 +4,9 @@ import { isDevelopment } from "./utils/build";
 import { main } from "./main.config";
 import TYPES from "./types/MainConfig";
 import Game from "./game/Game";
-// import screenfull = require("screenfull");
-// import isMobile from "ismobilejs";
-// if (isMobile().any) {
-// 	document.body.addEventListener("touchstart", () => {
-// 		if (screenfull.isEnabled) {
-// 			screenfull.request();
-// 			start();
-// 		}
-// 	});
-// } else {
-// 	start();
-// }
+import tryInitInFullscreen from "./fullScreen";
 
-start();
+tryInitInFullscreen(start);
 
 function start() {
 	if (isDevelopment()) {
