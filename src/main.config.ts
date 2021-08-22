@@ -6,7 +6,6 @@ import AssetsLoader from "./core/assetsLoader/AssetsLoader";
 import ViewPort from "./core/viewPort/ViewPort";
 import { Application } from "pixi.js";
 import StartGameStage from "./stages/StartGame.stage";
-// import BackgroundContainer from "./containers/background/Background.container";
 import CityContainer from "./containers/city/City.container";
 import CityCore from "./core/city/city.core";
 import app from "./app";
@@ -15,9 +14,6 @@ import MainBarContainer from "./containers/mainBar/MainBar.container";
 
 const main = new Container({ defaultScope: "Singleton" });
 
-// main
-// 	.bind<BackgroundContainer>(TYPES.BackgroundContainer)
-// 	.to(BackgroundContainer);
 
 main.bind<AssetsLoader>(TYPES.AssetsLoader).to(AssetsLoader);
 main.bind<StoreType>(TYPES.Store).toConstantValue(store);

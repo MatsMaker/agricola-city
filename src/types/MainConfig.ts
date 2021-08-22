@@ -9,7 +9,6 @@ const TYPES = {
 
 	Game: Symbol.for("Game"),
 
-	// BackgroundContainer: Symbol.for("BackgroundContainer"),
 	CityCore: Symbol.for("CityCore"),
 	CityContainer: Symbol.for("CityContainer"),
 	MainBarContainer: Symbol.for("MainBarContainer"),
