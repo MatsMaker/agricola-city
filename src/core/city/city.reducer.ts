@@ -6,21 +6,25 @@ import {
 	REQUEST_COMPLETED,
 	RESET_CITY,
 } from "./action";
-import { IBuildActionRequest } from "./types";
+import { IBuildActionRequest, IRequestAddCityMan } from "./types";
 import TYPES from "../../types/MainConfig";
 import CityCore from "./city.core";
 import { main } from "../../main.config";
 
 export interface ICityState {
+	addManRequest: IRequestAddCityMan;
 	buildRequest: IBuildActionRequest;
 	terrain: IBaseMapObject[][]; // TODO use immutable
-	objects: IBaseMapObject[][]; // TODO use immutable
+	objects: IBaseMapObject[][];
+	residents: IBaseMapObject[];
 }
 
 const initialState: ICityState = {
+	addManRequest: undefined,
 	buildRequest: undefined,
 	terrain: [],
 	objects: [],
+	residents: [],
 };
 
 export function cityReducer(
@@ -44,6 +48,7 @@ export function cityReducer(
 		case REQUEST_COMPLETED: {
 			return {
 				...state,
+				addManRequest: undefined,
 				buildRequest: undefined,
 			};
 		}

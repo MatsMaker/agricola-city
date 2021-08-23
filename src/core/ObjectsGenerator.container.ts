@@ -16,6 +16,7 @@ import CityHome from "../containers/objectsGenerator/CityHome.entity";
 import CitySenate from "../containers/objectsGenerator/CitySenate.entity";
 import { DrawBaseCb } from "../containers/city/types";
 import ButtonEntity from "../containers/mainBar/Button.entity";
+import CityManEntity from "../containers/objectsGenerator/CityMan.entity";
 
 export interface Item {
 	sprite: Sprite;
@@ -68,6 +69,22 @@ export default class ObjectsGenerator {
 					grasTexturesKeys[_.random(0, grasTexturesKeys.length - 1)];
 
 				mapObject = new CityRoad(
+					object.x,
+					object.y,
+					grasTextures[randomLandTexture]
+				);
+
+				break;
+			}
+
+			case MAP_OBJECT_TYPE.MAN: {
+				const grasTextures =
+					this.assetsLoader.getResource("img/man_walk_r").textures;
+				const grasTexturesKeys = Object.keys(grasTextures);
+				const randomLandTexture =
+					grasTexturesKeys[_.random(0, grasTexturesKeys.length - 1)];
+
+				mapObject = new CityManEntity(
 					object.x,
 					object.y,
 					grasTextures[randomLandTexture]
@@ -135,6 +152,7 @@ export default class ObjectsGenerator {
 			case MAP_OBJECT_TYPE.ALTAR:
 			case MAP_OBJECT_TYPE.HOME:
 			case MAP_OBJECT_TYPE.SENATE:
+			case MAP_OBJECT_TYPE.MAN:
 			case MAP_OBJECT_TYPE.BUTTON_HOME:
 			case MAP_OBJECT_TYPE.BUTTON_SENATE:
 			case MAP_OBJECT_TYPE.BUTTON_ROAD:
@@ -155,6 +173,12 @@ export default class ObjectsGenerator {
 		return tile;
 	};
 
+	public renderResident = (drawData: DrawBaseCb): Sprite => {
+		const { position, data } = drawData;
+		const tile = this.isoTile(data, position.x, position.y);
+		return tile;
+	};
+
 	protected getTextureByObjectType(type: MAP_OBJECT_TYPE): Texture {
 		let fileName: string;
 		switch (type) {
@@ -166,6 +190,9 @@ export default class ObjectsGenerator {
 				break;
 			case MAP_OBJECT_TYPE.SENATE:
 				fileName = "img/Senat_02";
+				break;
+			case MAP_OBJECT_TYPE.MAN:
+				fileName = "img/man_walk_r";
 				break;
 			case MAP_OBJECT_TYPE.BUTTON_ROAD:
 				fileName = "img/btn-road";

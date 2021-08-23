@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { MAP_OBJECT_TYPE } from "../../types/MapEntities";
+import { IBaseMapObject, MAP_OBJECT_TYPE } from "../../types/MapEntities";
 import { IConfigState } from "../config/config.reducer";
 import { ICityState } from "./city.reducer";
 import { inject, injectable } from "inversify";
@@ -33,6 +33,7 @@ class CityCore {
 
 		this.fillTerrainData();
 		this.fillObjectsData();
+		this.fillResidentsData();
 
 		return {
 			...this.cityState,
@@ -42,6 +43,7 @@ class CityCore {
 	public buildRequest = (buildRequest: IBuildActionRequest): ICityState => {
 		this.cacheDataInModel();
 
+		let nextState: ICityState;
 		const { type, coordinate } = buildRequest;
 		const { x, y } = coordinate;
 		const areaSize: number = this.configState.buildsSizes[buildRequest.type];
@@ -56,14 +58,22 @@ class CityCore {
 			mapArea(areaSize, (i, j) => {
 				this.cityState.objects[y + i][x + j] = newBuild;
 			});
-
-			return {
-				...this.cityState,
-				buildRequest,
-			};
+			if (buildRequest.type == MAP_OBJECT_TYPE.HOME) {
+				nextState = {
+					...this.cityState,
+					buildRequest,
+					addManRequest: { coordinate },
+				};
+			} else {
+				nextState = {
+					...this.cityState,
+					buildRequest,
+				};
+			}
 		} else {
-			return this.cityState;
+			nextState = this.cityState;
 		}
+		return nextState;
 	};
 
 	protected placeIsEmpty(coordinate: Point, size: number): boolean {
@@ -127,6 +137,25 @@ class CityCore {
 					};
 				});
 			}
+		});
+	}
+
+	protected fillResidentsData(): void {
+		const cityWidth = this.configState.citySize.width;
+		let currentObject;
+		const roads: IBaseMapObject[] = [];
+		mapArea(cityWidth, (x, y) => {
+			currentObject = this.cityState.objects[y][x];
+			if (currentObject && currentObject.type === MAP_OBJECT_TYPE.ROAD) {
+				roads.push(currentObject);
+			}
+		});
+
+		const manIsOnRoad: IBaseMapObject = roads[_.random(0, roads.length - 1)];
+		this.cityState.residents.push({
+			x: manIsOnRoad.x,
+			y: manIsOnRoad.y,
+			type: MAP_OBJECT_TYPE.MAN,
 		});
 	}
 }

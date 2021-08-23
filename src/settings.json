@@ -5,11 +5,12 @@
     "img/house-2-02.png",
     "img/Senat_02.png",
     "img/Tiles.png",
-    "img/road.json",
     "img/btn-road.png",
     "img/btn-home.png",
     "img/btn-off.png",
     "img/btn-senate.png",
+    "img/road.json",
+    "img/man_walk_r.json",
     "img/grass.json"
   ],
   "fonts": {

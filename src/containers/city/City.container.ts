@@ -32,10 +32,12 @@ class CityContainer {
   protected objectsGenerator: ObjectsGenerator;
   protected assetsLoader: AssetsLoader;
   protected viewPort: ViewPort;
+
   protected container: Container;
 
   protected cityTerrains: CityItem[] = [];
   protected cityObjects: CityItem[] = [];
+  protected cityResides: CityItem[] = [];
 
   constructor(
     @inject(TYPES.Store) store: StoreType,
@@ -138,6 +140,16 @@ class CityContainer {
     const appState = this.store.getState();
     this.drawMap(appState.city.terrain, this.renderTerrain);
     this.drawMap(appState.city.objects, this.renderObject);
+
+    appState.city.residents.forEach((d: IBaseMapObject) => {
+      const coordinate = new Point(d.x, d.y);
+      const item: IBaseMapObject = {
+        x: coordinate.x,
+        y: coordinate.y,
+        type: d.type,
+      };
+      this.drawOne(item, coordinate, this.renderResidents);
+    });
   };
 
   protected onTerrainClick = (e: any) => {
@@ -157,6 +169,18 @@ class CityContainer {
     const tile = this.objectsGenerator.renderTerrain(drawData);
     tile.name = `cityContainer/cityTerrains/${data.type}`;
     this.cityTerrains.push({
+      sprite: tile,
+      entity: data,
+      coordinate,
+    });
+    this.container.addChild(tile);
+  };
+
+  protected renderResidents = (drawData: DrawCb) => {
+    const { data, coordinate } = drawData;
+    const tile = this.objectsGenerator.renderResident(drawData);
+    tile.name = `cityContainer/cityTerrains/${data.type}`;
+    this.cityResides.push({
       sprite: tile,
       entity: data,
       coordinate,
@@ -204,8 +228,16 @@ class CityContainer {
         type: action.payload.type,
       };
       this.drawOne(item, action.payload.coordinate, this.renderObject);
-      this.store.dispatch(requestCompletedAction());
     }
+    if (city.addManRequest) {
+      const item: IBaseMapObject = {
+        x: action.payload.coordinate.x,
+        y: action.payload.coordinate.y,
+        type: action.payload.type,
+      };
+      this.drawOne(item, action.payload.coordinate, this.renderResidents);
+    }
+    this.store.dispatch(requestCompletedAction());
   }
 
   protected getIso = (absolutePoint: Point): Point => {
