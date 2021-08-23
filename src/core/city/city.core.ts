@@ -89,7 +89,7 @@ class CityCore {
 		let placeIsEmpty: boolean = true;
 		const { x, y } = coordinate;
 		mapArea(size, (i, j) => {
-			if (this.cityState.objects[y + i][x + j]) {
+			if (this.cityState.objects[y + i][x + j] !== null) {
 				placeIsEmpty = false;
 			}
 		});
@@ -113,7 +113,7 @@ class CityCore {
 				greed[y] = [];
 			}
 			if (!greed[y][x]) {
-				greed[y][x] = undefined;
+				greed[y][x] = null;
 			}
 		});
 		return greed;
