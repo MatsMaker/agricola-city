@@ -4,9 +4,9 @@ import { isDevelopment } from "./utils/build";
 import { main } from "./main.config";
 import TYPES from "./types/MainConfig";
 import Game from "./game/Game";
-import tryInitInFullscreen from "./fullScreen";
-
-tryInitInFullscreen(start);
+// import tryInitInFullscreen from "./fullScreen";
+// tryInitInFullscreen(start);
+start();
 
 function start() {
 	if (isDevelopment()) {
