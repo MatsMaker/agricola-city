@@ -232,8 +232,8 @@ class CityContainer {
     }
     if (city.addManRequest) {
       const manItem: IBaseMapObject = {
-        x: this.spawnPoint.x,
-        y: this.spawnPoint.y,
+        x: city.addManRequest.x,
+        y: city.addManRequest.y,
         type: MAP_OBJECT_TYPE.MAN,
       };
       this.drawOne(manItem, this.spawnPoint, this.renderResidents);

@@ -46,8 +46,8 @@ class CityCore {
 		let nextState: ICityState;
 		const { type, coordinate } = buildRequest;
 		const { x, y } = coordinate;
-		const areaSize: number = this.configState.buildsSizes[buildRequest.type];
-		const placeIsEmpty = this.placeIsEmpty(coordinate, areaSize);
+		const buildArea: number = this.configState.buildsSizes[buildRequest.type];
+		const placeIsEmpty = this.placeIsEmpty(coordinate, buildArea);
 
 		if (placeIsEmpty) {
 			const newBuild = {
@@ -55,14 +55,23 @@ class CityCore {
 				y: coordinate.y,
 				type,
 			};
-			mapArea(areaSize, (i, j) => {
+			mapArea(buildArea, (i, j) => {
 				this.cityState.objects[y + i][x + j] = newBuild;
 			});
 			if (buildRequest.type == MAP_OBJECT_TYPE.HOME) {
+				const { citySpawnPoint } = this.configState;
+				const newMan = {
+					x: citySpawnPoint.x,
+					y: citySpawnPoint.y,
+					type: MAP_OBJECT_TYPE.MAN,
+				};
+				this.cityState.residents.push(newMan);
 				nextState = {
 					...this.cityState,
 					buildRequest,
-					addManRequest: { coordinate },
+					addManRequest: {
+						coordinate: new Point(newMan.x, newMan.y),
+					},
 				};
 			} else {
 				nextState = {
@@ -144,6 +153,7 @@ class CityCore {
 		const cityWidth = this.configState.citySize.width;
 		let currentObject;
 		const roads: IBaseMapObject[] = [];
+		this.cityState.residents = [];
 		mapArea(cityWidth, (x, y) => {
 			currentObject = this.cityState.objects[y][x];
 			if (currentObject && currentObject.type === MAP_OBJECT_TYPE.ROAD) {

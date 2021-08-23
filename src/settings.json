@@ -26,6 +26,7 @@
     "tileHeight": 26,
     "distortionFactor": 2
   },
+  "citySpawnPoint": { "x": 8, "y": 8 },
   "startCityData": [
     {
       "x": 7,
