@@ -6,7 +6,7 @@ import { StoreType } from "store";
 import { onEvent } from "../../utils/store.subscribe";
 import ViewPort from "../../core/viewPort/ViewPort";
 import { DrawCb } from "./types";
-import { IBaseMapObject, IViewObject } from "../../types/MapEntities";
+import { IBaseMapObject, IViewObject, MAP_OBJECT_TYPE } from "../../types/MapEntities";
 import {
   BUILD_REQUEST,
   RE_RENDER_CITY,
@@ -38,6 +38,8 @@ class CityContainer {
   protected cityTerrains: CityItem[] = [];
   protected cityObjects: CityItem[] = [];
   protected cityResides: CityItem[] = [];
+
+  public spawnPoint = new Point(8, 8); // some point near Altar point on road
 
   constructor(
     @inject(TYPES.Store) store: StoreType,
@@ -142,13 +144,12 @@ class CityContainer {
     this.drawMap(appState.city.objects, this.renderObject);
 
     appState.city.residents.forEach((d: IBaseMapObject) => {
-      const coordinate = new Point(d.x, d.y);
       const item: IBaseMapObject = {
-        x: coordinate.x,
-        y: coordinate.y,
+        x: this.spawnPoint.x,
+        y: this.spawnPoint.y,
         type: d.type,
       };
-      this.drawOne(item, coordinate, this.renderResidents);
+      this.drawOne(item, this.spawnPoint, this.renderResidents);
     });
   };
 
@@ -230,12 +231,12 @@ class CityContainer {
       this.drawOne(item, action.payload.coordinate, this.renderObject);
     }
     if (city.addManRequest) {
-      const item: IBaseMapObject = {
-        x: action.payload.coordinate.x,
-        y: action.payload.coordinate.y,
-        type: action.payload.type,
+      const manItem: IBaseMapObject = {
+        x: this.spawnPoint.x,
+        y: this.spawnPoint.y,
+        type: MAP_OBJECT_TYPE.MAN,
       };
-      this.drawOne(item, action.payload.coordinate, this.renderResidents);
+      this.drawOne(manItem, this.spawnPoint, this.renderResidents);
     }
     this.store.dispatch(requestCompletedAction());
   }

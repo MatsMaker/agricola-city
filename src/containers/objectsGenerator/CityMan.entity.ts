@@ -1,10 +1,10 @@
 import { Point, Sprite, Texture } from "pixi.js";
-import { IViewObject, MAP_OBJECT_TYPE } from '../../types/MapEntities';
+import { IViewObject, MAP_OBJECT_TYPE } from "../../types/MapEntities";
 
 class CityManEntity implements IViewObject {
 	public x: number;
 	public y: number;
-	public type: MAP_OBJECT_TYPE;
+	public type: MAP_OBJECT_TYPE = MAP_OBJECT_TYPE.MAN;
 	public size: number = 1;
 	public texture: Texture;
 	public sprite: Sprite;
