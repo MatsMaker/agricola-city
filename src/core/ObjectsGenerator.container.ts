@@ -17,6 +17,8 @@ import CitySenate from "../containers/objectsGenerator/CitySenate.entity";
 import { DrawBaseCb } from "../containers/city/types";
 import ButtonEntity from "../containers/mainBar/Button.entity";
 import CityManEntity from "../containers/objectsGenerator/CityMan.entity";
+import { StoreType } from "store";
+import { mapArea } from "../utils/area";
 
 export interface Item {
 	sprite: Sprite;
@@ -24,9 +26,14 @@ export interface Item {
 }
 @injectable()
 export default class ObjectsGenerator {
+	protected store: StoreType;
 	protected assetsLoader: AssetsLoader;
 
-	constructor(@inject(TYPES.AssetsLoader) assetsLoader: AssetsLoader) {
+	constructor(
+		@inject(TYPES.Store) store: StoreType,
+		@inject(TYPES.AssetsLoader) assetsLoader: AssetsLoader
+	) {
+		this.store = store;
 		this.assetsLoader = assetsLoader;
 	}
 
@@ -63,15 +70,45 @@ export default class ObjectsGenerator {
 			}
 
 			case MAP_OBJECT_TYPE.ROAD: {
-				const grasTextures = this.assetsLoader.getResource("img/road").textures;
-				const grasTexturesKeys = Object.keys(grasTextures);
-				const randomLandTexture =
-					grasTexturesKeys[_.random(0, grasTexturesKeys.length - 1)];
+				const { city } = this.store.getState();
+
+				const roadTextures = this.assetsLoader.getResource("img/road").textures;
+
+				const masksTypes: IRoadMask[] = [
+					{
+
+						mask: [
+							[false, false, false],
+							[false, true, false],
+							[false, false, false],
+						],
+						textureTile: "road11.png",
+					},
+					{
+						mask: [
+							[false, true, false],
+							[false, true, false],
+							[false, false, false],
+						],
+						textureTile: "road12.png",
+					},
+				];
+				const textureType: IRoadMask = masksTypes.find((maskType: IRoadMask) => {
+					let doesNotFit = false;
+					mapArea(maskType.mask.length, (i, j) => {
+						const mi = object.y - 1 + i;
+						const mj = object.x - 1 + j;
+						if (maskType.mask[i][j] !== !!city.objects[mi][mj]) {
+							doesNotFit = true;
+						}
+					});
+					return !doesNotFit;
+				});
 
 				mapObject = new CityRoad(
 					object.x,
 					object.y,
-					grasTextures[randomLandTexture]
+					roadTextures[textureType ? textureType.textureTile : "road7.png"]
 				);
 
 				break;
@@ -83,7 +120,6 @@ export default class ObjectsGenerator {
 				const grasTexturesKeys = Object.keys(grasTextures);
 				const randomLandTexture =
 					grasTexturesKeys[_.random(0, grasTexturesKeys.length - 1)];
-
 				mapObject = new CityManEntity(
 					object.x,
 					object.y,
@@ -223,4 +259,9 @@ export default class ObjectsGenerator {
 
 		return tile;
 	}
+}
+
+interface IRoadMask {
+	mask: boolean[][];
+	textureTile: string;
 }

@@ -26,15 +26,10 @@
     "tileHeight": 26,
     "distortionFactor": 2
   },
-  "citySpawnPoint": { "x": 8, "y": 8 },
+  "citySpawnPoint": { "x": 3, "y": 3 },
   "startCityData": [
     {
       "x": 7,
-      "y": 7,
-      "type": "ALTAR"
-    },
-    {
-      "x": 7,
       "y": 8,
       "type": "ROAD"
     },
@@ -71,6 +66,11 @@
     {
       "x": 6,
       "y": 8,
+      "type": "ROAD"
+    },
+    {
+      "x": 7,
+      "y": 7,
       "type": "ROAD"
     }
   ],

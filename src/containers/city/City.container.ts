@@ -39,8 +39,6 @@ class CityContainer {
   protected cityObjects: CityItem[] = [];
   protected cityResides: CityItem[] = [];
 
-  public spawnPoint = new Point(8, 8); // some point near Altar point on road
-
   constructor(
     @inject(TYPES.Store) store: StoreType,
     @inject(TYPES.ObjectsGenerator) objectsGenerator: ObjectsGenerator,
@@ -145,11 +143,11 @@ class CityContainer {
 
     appState.city.residents.forEach((d: IBaseMapObject) => {
       const item: IBaseMapObject = {
-        x: this.spawnPoint.x,
-        y: this.spawnPoint.y,
+        x: d.x,
+        y: d.y,
         type: d.type,
       };
-      this.drawOne(item, this.spawnPoint, this.renderResidents);
+      this.drawOne(item, new Point(d.x, d.y), this.renderResidents);
     });
   };
 
@@ -236,7 +234,10 @@ class CityContainer {
         y: city.addManRequest.y,
         type: MAP_OBJECT_TYPE.MAN,
       };
-      this.drawOne(manItem, this.spawnPoint, this.renderResidents);
+      this.drawOne(manItem, new Point(
+        city.addManRequest.x,
+        city.addManRequest.y
+      ), this.renderResidents);
     }
     this.store.dispatch(requestCompletedAction());
   }

@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { IBaseMapObject, MAP_OBJECT_TYPE } from "../../types/MapEntities";
+import { MAP_OBJECT_TYPE } from "../../types/MapEntities";
 import { IConfigState } from "../config/config.reducer";
 import { ICityState } from "./city.reducer";
 import { inject, injectable } from "inversify";
@@ -150,21 +150,12 @@ class CityCore {
 	}
 
 	protected fillResidentsData(): void {
-		const cityWidth = this.configState.citySize.width;
-		let currentObject;
-		const roads: IBaseMapObject[] = [];
+		const { citySpawnPoint } = this.store.getState().config;
 		this.cityState.residents = [];
-		mapArea(cityWidth, (x, y) => {
-			currentObject = this.cityState.objects[y][x];
-			if (currentObject && currentObject.type === MAP_OBJECT_TYPE.ROAD) {
-				roads.push(currentObject);
-			}
-		});
 
-		const manIsOnRoad: IBaseMapObject = roads[_.random(0, roads.length - 1)];
 		this.cityState.residents.push({
-			x: manIsOnRoad.x,
-			y: manIsOnRoad.y,
+			x: citySpawnPoint.x,
+			y: citySpawnPoint.y,
 			type: MAP_OBJECT_TYPE.MAN,
 		});
 	}
