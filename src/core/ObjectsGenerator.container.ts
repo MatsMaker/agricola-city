@@ -71,32 +71,12 @@ export default class ObjectsGenerator {
 			}
 
 			case MAP_OBJECT_TYPE.ROAD: {
-				const { city } = this.store.getState();
-
-				const roadTextures = this.assetsLoader.getResource("img/road").textures;
-
-				const textureType: IRoadMask = roadMasksTypes.find(
-					(maskType: IRoadMask) => {
-						let doesNotFit = false;
-						mapArea(maskType.mask.length, (i, j) => {
-							const mi = object.y - 1 + i;
-							const mj = object.x - 1 + j;
-							if (
-								maskType.mask[i] !== undefined && maskType.mask[i][j] !== undefined && //do not matter
-								city.objects[mi] !== undefined && //end map
-								maskType.mask[i][j] !== !!city.objects[mi][mj]
-							) {
-								doesNotFit = true;
-							}
-						});
-						return !doesNotFit;
-					}
-				);
+				const texture: Texture = this.getRoadMasksTypes(new Point(object.x, object.y));
 
 				mapObject = new CityRoad(
 					object.x,
 					object.y,
-					roadTextures[textureType.textureTile]
+					texture
 				);
 
 				break;
@@ -234,6 +214,30 @@ export default class ObjectsGenerator {
 		}
 		return this.assetsLoader.getResource(fileName).texture;
 	}
+
+	public getRoadMasksTypes = (coordinate: Point): Texture => {
+		const { city } = this.store.getState();
+		const roadTextures = this.assetsLoader.getResource("img/road").textures;
+
+		const roadMaskTexture: IRoadMask = roadMasksTypes.find((maskType: IRoadMask) => {
+			let doesNotFit = false;
+			mapArea(maskType.mask.length, (i, j) => {
+				const mi = coordinate.y - 1 + i;
+				const mj = coordinate.x - 1 + j;
+				if (
+					maskType.mask[i] !== undefined &&
+					maskType.mask[i][j] !== undefined && //do not matter
+					city.objects[mi] !== undefined && //end map
+					maskType.mask[i][j] !== !!city.objects[mi][mj]
+				) {
+					doesNotFit = true;
+				}
+			});
+			return !doesNotFit;
+		});
+
+		return roadTextures[roadMaskTexture.textureTile];
+	};
 
 	protected isoTile(data: IViewObject, x: number, y: number): Sprite {
 		const tile = new Sprite(data.texture);

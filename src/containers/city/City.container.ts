@@ -6,7 +6,11 @@ import { StoreType } from "store";
 import { onEvent } from "../../utils/store.subscribe";
 import ViewPort from "../../core/viewPort/ViewPort";
 import { DrawCb } from "./types";
-import { IBaseMapObject, IViewObject, MAP_OBJECT_TYPE } from "../../types/MapEntities";
+import {
+  IBaseMapObject,
+  IViewObject,
+  MAP_OBJECT_TYPE,
+} from "../../types/MapEntities";
 import {
   BUILD_REQUEST,
   RE_RENDER_CITY,
@@ -197,11 +201,17 @@ class CityContainer {
     }
     const tile = this.objectsGenerator.renderObject(drawData);
     tile.name = `cityContainer/cityObjects/${data.type}`;
+
+    if (data.type === MAP_OBJECT_TYPE.ROAD) {
+      this.updateAdjacentRoadTiles();
+    }
+
     this.cityObjects.push({
       sprite: tile,
       entity: data,
       coordinate,
     });
+
     this.container.addChild(tile);
   };
 
@@ -229,15 +239,16 @@ class CityContainer {
       this.drawOne(item, action.payload.coordinate, this.renderObject);
     }
     if (city.addManRequest) {
-      const manItem: IBaseMapObject = {
-        x: city.addManRequest.coordinate.x,
-        y: city.addManRequest.coordinate.y,
-        type: MAP_OBJECT_TYPE.MAN,
-      };
-      this.drawOne(manItem, new Point(
+      const cp: Point = new Point(
         city.addManRequest.coordinate.x,
         city.addManRequest.coordinate.y
-      ), this.renderResidents);
+      );
+      const manItem: IBaseMapObject = {
+        x: cp.x,
+        y: cp.y,
+        type: MAP_OBJECT_TYPE.MAN,
+      };
+      this.drawOne(manItem, cp, this.renderResidents);
     }
     this.store.dispatch(requestCompletedAction());
   }
@@ -276,6 +287,20 @@ class CityContainer {
     const x = Math.trunc(position.x / tileHeight);
     const y = Math.trunc(position.y / tileHeight);
     return new Point(x, y);
+  };
+
+  protected updateAdjacentRoadTiles = (): void => {
+    this.cityObjects.forEach((cityItem: CityItem) => {
+      // mapArea(3, (i, j) => { TODO need add optimization to not update all ROD sprite
+      if (
+        cityItem.entity.type === MAP_OBJECT_TYPE.ROAD) {
+        const newTexture = this.objectsGenerator.getRoadMasksTypes(
+          cityItem.coordinate
+        );
+        cityItem.sprite.texture = newTexture;
+      }
+      // });
+    });
   };
 
   static distancePointToLIne = (X1: Point, X2: Point, P0: Point): number => {
