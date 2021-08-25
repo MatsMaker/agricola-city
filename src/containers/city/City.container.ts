@@ -145,7 +145,7 @@ class CityContainer {
     this.drawMap(appState.city.terrain, this.renderTerrain);
     this.drawMap(appState.city.objects, this.renderObject);
 
-    appState.city.residents.forEach((d: IBaseMapObject) => {
+    appState.city.mans.forEach((d: IBaseMapObject) => {
       const item: IBaseMapObject = {
         x: d.x,
         y: d.y,

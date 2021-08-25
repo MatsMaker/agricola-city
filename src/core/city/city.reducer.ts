@@ -16,7 +16,7 @@ export interface ICityState {
 	buildRequest: IBuildActionRequest;
 	terrain: IBaseMapObject[][]; // TODO use immutable
 	objects: IBaseMapObject[][];
-	residents: IBaseMapObject[];
+	mans: IBaseMapObject[];
 }
 
 const initialState: ICityState = {
@@ -24,7 +24,7 @@ const initialState: ICityState = {
 	buildRequest: undefined,
 	terrain: [],
 	objects: [],
-	residents: [],
+	mans: [],
 };
 
 export function cityReducer(

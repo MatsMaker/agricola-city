@@ -33,7 +33,7 @@ class CityCore {
 
 		this.fillTerrainData();
 		this.fillObjectsData();
-		this.fillResidentsData();
+		this.fillMansData();
 
 		return {
 			...this.cityState,
@@ -65,7 +65,7 @@ class CityCore {
 					y: citySpawnPoint.y,
 					type: MAP_OBJECT_TYPE.MAN,
 				};
-				this.cityState.residents.push(newMan);
+				this.cityState.mans.push(newMan);
 				nextState = {
 					...this.cityState,
 					buildRequest,
@@ -149,11 +149,11 @@ class CityCore {
 		});
 	}
 
-	protected fillResidentsData(): void {
+	protected fillMansData(): void {
 		const { citySpawnPoint } = this.store.getState().config;
-		this.cityState.residents = [];
+		this.cityState.mans = [];
 
-		this.cityState.residents.push({
+		this.cityState.mans.push({
 			x: citySpawnPoint.x,
 			y: citySpawnPoint.y,
 			type: MAP_OBJECT_TYPE.MAN,
