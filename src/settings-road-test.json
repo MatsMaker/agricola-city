@@ -26,52 +26,77 @@
     "tileHeight": 26,
     "distortionFactor": 2
   },
-  "citySpawnPoint": { "x": 6, "y": 7 },
+  "citySpawnPoint": { "x": 3, "y": 3 },
   "startCityData": [
     {
-      "x": 7,
-      "y": 8,
+      "x": 0,
+      "y": 5,
       "type": "ROAD"
     },
     {
-      "x": 8,
-      "y": 8,
-      "type": "ROAD"
-    },
-    {
-      "x": 8,
-      "y": 7,
-      "type": "ROAD"
-    },
-    {
-      "x": 8,
+      "x": 0,
       "y": 6,
       "type": "ROAD"
     },
     {
-      "x": 7,
-      "y": 6,
-      "type": "ROAD"
-    },
-    {
-      "x": 6,
-      "y": 6,
-      "type": "ROAD"
-    },
-    {
-      "x": 6,
+      "x": 0,
       "y": 7,
       "type": "ROAD"
     },
     {
-      "x": 6,
+      "x": 0,
       "y": 8,
       "type": "ROAD"
     },
     {
+      "x": 1,
+      "y": 1,
+      "type": "ROAD"
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "type": "ROAD"
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "type": "ROAD"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "type": "ROAD"
+    },
+    {
+      "x": 3,
+      "y": 1,
+      "type": "ROAD"
+    },
+    {
+      "x": 3,
+      "y": 2,
+      "type": "ROAD"
+    },
+    {
+      "x": 4,
+      "y": 2,
+      "type": "ROAD"
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "type": "ROAD"
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "type": "ROAD"
+    },
+    {
       "x": 7,
       "y": 7,
-      "type": "ALTAR"
+      "type": "ROAD"
     }
   ],
   "buildsSizes": {

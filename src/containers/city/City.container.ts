@@ -230,13 +230,13 @@ class CityContainer {
     }
     if (city.addManRequest) {
       const manItem: IBaseMapObject = {
-        x: city.addManRequest.x,
-        y: city.addManRequest.y,
+        x: city.addManRequest.coordinate.x,
+        y: city.addManRequest.coordinate.y,
         type: MAP_OBJECT_TYPE.MAN,
       };
       this.drawOne(manItem, new Point(
-        city.addManRequest.x,
-        city.addManRequest.y
+        city.addManRequest.coordinate.x,
+        city.addManRequest.coordinate.y
       ), this.renderResidents);
     }
     this.store.dispatch(requestCompletedAction());
