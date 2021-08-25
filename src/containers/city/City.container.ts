@@ -22,7 +22,7 @@ import {
 import { ActionType } from "../../types/actions";
 import * as _ from "lodash";
 import { IBuildActionRequest } from "../../core/city/types";
-import ObjectsGenerator from "../../core/ObjectsGenerator.container";
+import ObjectsGenerator from "../objectsGenerator/ObjectsGenerator.container";
 
 export interface CityItem {
   sprite: Sprite;
@@ -292,8 +292,7 @@ class CityContainer {
   protected updateAdjacentRoadTiles = (): void => {
     this.cityObjects.forEach((cityItem: CityItem) => {
       // mapArea(3, (i, j) => { TODO need add optimization to not update all ROD sprite
-      if (
-        cityItem.entity.type === MAP_OBJECT_TYPE.ROAD) {
+      if (cityItem.entity.type === MAP_OBJECT_TYPE.ROAD) {
         const newTexture = this.objectsGenerator.getRoadMasksTypes(
           cityItem.coordinate
         );

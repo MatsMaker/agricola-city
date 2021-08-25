@@ -3,23 +3,23 @@ import {
 	IBaseMapObject,
 	IViewObject,
 	MAP_OBJECT_TYPE,
-} from "../types/MapEntities";
+} from "../../types/MapEntities";
 import { Point, Sprite, Texture } from "pixi.js";
-import AssetsLoader from "./assetsLoader/AssetsLoader";
+import AssetsLoader from "../../core/assetsLoader/AssetsLoader";
 import { injectable } from "inversify";
 import { inject } from "inversify";
-import TYPES from "../types/MainConfig";
-import CityLand from "../containers/objectsGenerator/CityLand.entity";
-import CityRoad from "../containers/objectsGenerator/CityRoad.entity";
-import CityAltar from "../containers/objectsGenerator/CityAltar.entity";
-import CityHome from "../containers/objectsGenerator/CityHome.entity";
-import CitySenate from "../containers/objectsGenerator/CitySenate.entity";
-import { DrawBaseCb } from "../containers/city/types";
-import ButtonEntity from "../containers/mainBar/Button.entity";
-import CityManEntity from "../containers/objectsGenerator/CityMan.entity";
+import TYPES from "../../types/MainConfig";
+import CityLand from "./CityLand.entity";
+import CityRoad from "./CityRoad.entity";
+import CityAltar from "./CityAltar.entity";
+import CityHome from "./CityHome.entity";
+import CitySenate from "./CitySenate.entity";
+import { DrawBaseCb } from "../city/types";
+import ButtonEntity from "../mainBar/Button.entity";
+import CityManEntity from "./CityMan.entity";
 import { StoreType } from "store";
-import { mapArea } from "../utils/area";
-import roadMasksTypes, { IRoadMask } from "./RoadMaskTypes";
+import { mapArea } from "../../utils/area";
+import roadMasksTypes, { IRoadMask } from "../../core/RoadMaskTypes";
 
 export interface Item {
 	sprite: Sprite;

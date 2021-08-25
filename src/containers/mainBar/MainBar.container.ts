@@ -6,7 +6,7 @@ import { StoreType } from "store";
 import TYPES from "../../types/MainConfig";
 import { MAP_OBJECT_TYPE } from "../../types/MapEntities";
 import { onEvent } from "../../utils/store.subscribe";
-import ObjectsGenerator, { Item } from "../../core/ObjectsGenerator.container";
+import ObjectsGenerator, { Item } from "../objectsGenerator/ObjectsGenerator.container";
 import { forEach } from "lodash";
 import { INIT_MAIN_MENU, mainBarButtonClickAction } from "./action";
 import { BUTTONS_TYPE } from "./type";

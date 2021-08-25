@@ -9,7 +9,7 @@ import StartGameStage from "./stages/StartGame.stage";
 import CityContainer from "./containers/city/City.container";
 import CityCore from "./core/city/city.core";
 import app from "./app";
-import ObjectsGenerator from './core/ObjectsGenerator.container';
+import ObjectsGenerator from './containers/objectsGenerator/ObjectsGenerator.container';
 import MainBarContainer from "./containers/mainBar/MainBar.container";
 
 const main = new Container({ defaultScope: "Singleton" });
