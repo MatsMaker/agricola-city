@@ -101,10 +101,6 @@ class MainBarContainer {
 		});
 	}
 
-	protected reRender(): void {
-		this.viewPort.addTickOnce(() => { });
-	}
-
 	protected init = (): void => {
 		this.initContainer();
 		this.initListeners();

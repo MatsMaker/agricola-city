@@ -41,7 +41,7 @@ class CityContainer {
 
   protected cityTerrains: CityItem[] = [];
   protected cityObjects: CityItem[] = [];
-  protected cityResides: CityItem[] = [];
+  protected cityMans: CityItem[] = [];
 
   constructor(
     @inject(TYPES.Store) store: StoreType,
@@ -151,7 +151,7 @@ class CityContainer {
         y: d.y,
         type: d.type,
       };
-      this.drawOne(item, new Point(d.x, d.y), this.renderResidents);
+      this.drawOne(item, new Point(d.x, d.y), this.renderMan);
     });
   };
 
@@ -179,11 +179,11 @@ class CityContainer {
     this.container.addChild(tile);
   };
 
-  protected renderResidents = (drawData: DrawCb) => {
+  protected renderMan = (drawData: DrawCb) => {
     const { data, coordinate } = drawData;
-    const tile = this.objectsGenerator.renderResident(drawData);
+    const tile = this.objectsGenerator.renderMan(drawData);
     tile.name = `cityContainer/cityTerrains/${data.type}`;
-    this.cityResides.push({
+    this.cityMans.push({
       sprite: tile,
       entity: data,
       coordinate,
@@ -248,7 +248,7 @@ class CityContainer {
         y: cp.y,
         type: MAP_OBJECT_TYPE.MAN,
       };
-      this.drawOne(manItem, cp, this.renderResidents);
+      this.drawOne(manItem, cp, this.renderMan);
     }
     this.store.dispatch(requestCompletedAction());
   }

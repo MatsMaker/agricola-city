@@ -177,7 +177,7 @@ export default class ObjectsGenerator {
 		return tile;
 	};
 
-	public renderResident = (drawData: DrawBaseCb): Sprite => {
+	public renderMan = (drawData: DrawBaseCb): Sprite => {
 		const { position, data } = drawData;
 		const tile = this.isoTile(data, position.x, position.y);
 		return tile;
