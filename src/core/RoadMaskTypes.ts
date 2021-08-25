@@ -105,6 +105,14 @@ const roadMasksTypes: IRoadMask[] = [
 	},
 	{
 		mask: [
+			[undefined, undefined, undefined],
+			[true, undefined, false],
+			[undefined, undefined, undefined],
+		],
+		textureTile: "road15.png",
+	},
+	{
+		mask: [
 			[undefined, false, undefined],
 			[true, undefined, true],
 			[undefined, undefined, undefined],
