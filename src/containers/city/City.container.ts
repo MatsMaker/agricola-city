@@ -156,8 +156,9 @@ class CityContainer {
         this.renderObject
       );
     }
-
-    this.store.dispatch(requestCompletedAction());
+    if (!city.addManRequest) { // TODO need fix this ManContainer connection
+      this.store.dispatch(requestCompletedAction());
+    }
   }
 
   protected updateAdjacentRoadTiles = (): void => {

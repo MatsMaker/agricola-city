@@ -8,18 +8,11 @@ import { DrawCb } from "./types";
 import { IBaseMapObject, MAP_OBJECT_TYPE } from "../../types/MapEntities";
 import * as _ from "lodash";
 import ObjectsGenerator from "../objectsGenerator/ObjectsGenerator.container";
-import { CityItem, MapPoint } from "./City.container";
+import { CityItem } from "./City.container";
 import CityGridContainer from "./CityGrid.container";
-import { BUILD_REQUEST, INIT_CITY } from "../../core/city/action";
+import { BUILD_REQUEST, INIT_CITY, requestCompletedAction } from "../../core/city/action";
 import { onEvent } from "../../utils/store.subscribe";
-import { VIEW_PORT_TICK } from "../../core/viewPort/actions";
-import { ActionType } from '../../types/actions';
-import { TickAction } from "../../core/viewPort/types";
-import { theSamePoint } from '../../utils/area';
-
-interface CityManItem extends CityItem {
-	goal: MapPoint;
-}
+import CityManItem from "./CityMan.item";
 
 @injectable()
 class CityManContainer {
@@ -54,7 +47,7 @@ class CityManContainer {
 		const { subscribe } = this.store;
 		subscribe(onEvent(INIT_CITY, this.render.bind(this)));
 		subscribe(onEvent(BUILD_REQUEST, this.addManOnBuildRequest.bind(this)));
-		subscribe(onEvent(VIEW_PORT_TICK, this.moveMans.bind(this)));
+		// subscribe(onEvent(VIEW_PORT_TICK, this.moveMans.bind(this)));
 	};
 
 	public renderContent = () => {
@@ -73,12 +66,17 @@ class CityManContainer {
 		const { data, coordinate } = drawData;
 		const tile = this.objectsGenerator.renderMan(drawData);
 		tile.name = `cityContainer/cityTerrains/${data.type}`;
-		this.cityMans.push({
+
+		const cityManItem: CityManItem = new CityManItem({
 			sprite: tile,
 			entity: data,
 			coordinate,
-			goal: this.getNextManGoal(coordinate),
 		});
+		cityManItem.lookAround = this.getCityRodMap;
+		cityManItem.onMoved = this.cityManMoved;
+		cityManItem.startMoveAnimation();
+
+		this.cityMans.push(cityManItem);
 		this.view.addChild(tile);
 	};
 
@@ -88,32 +86,13 @@ class CityManContainer {
 		});
 	}
 
-	protected moveMans = (action: ActionType<TickAction>): void => {
-		this.cityMans.forEach((m: CityManItem) => {
-			if (theSamePoint(m.coordinate, m.goal)) {
-				const nextGoalCoordinate = this.getNextManGoal(m.coordinate);
-				// console.log(nextGoalCoordinate);
-			} else {
-				// console.log("Move man ", m);
-			}
-		});
-	};
-
-	protected getNextManGoal = (currentPoint: MapPoint): MapPoint => {
-		console.log("//TODO need calc nex man goal from", currentPoint);
-		return {
-			x: 0,
-			y: 0,
-		};
-	};
-
-	public reset(): void {
+	protected reset(): void {
 		this.cityMans.forEach((m: CityItem) => {
 			this.view.removeChild(m.sprite);
 		});
 	}
 
-	public addManOnBuildRequest(): void {
+	protected addManOnBuildRequest(): void {
 		const { city } = this.store.getState();
 		if (city.addManRequest) {
 			const cp: Point = new Point(
@@ -126,8 +105,19 @@ class CityManContainer {
 				type: MAP_OBJECT_TYPE.MAN,
 			};
 			this.cityGridContainer.drawOne(manItem, cp, this.renderMan);
+			this.store.dispatch(requestCompletedAction());
 		}
 	}
+
+	protected cityManMoved = () => {
+		console.info('cityManMoved');
+		// this.store.dispatch(cityManMovedAction(from, to));
+	}
+
+	public getCityRodMap = () => {
+		const { city } = this.store.getState();
+		return city.objects;
+	};
 }
 
 export default CityManContainer;
