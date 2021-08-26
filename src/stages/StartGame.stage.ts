@@ -17,6 +17,8 @@ import {
 } from "../core/city/action";
 import MainBarContainer from "../containers/mainBar/MainBar.container";
 import { initMainMenu } from '../containers/mainBar/action';
+import CityGridContainer from '../containers/city/CityGrid.container';
+import CityManContainer from "../containers/city/CityMan.container";
 
 @injectable()
 class StartGameStage {
@@ -24,17 +26,23 @@ class StartGameStage {
 	protected viewPort: ViewPort;
 
 	protected cityContainer: CityContainer;
+	protected cityGridContainer: CityGridContainer;
 	protected mainBarContainer: MainBarContainer;
+	protected cityManContainer: CityManContainer;
 
 	constructor(
 		@inject(TYPES.Store) store: StoreType,
 		@inject(TYPES.ViewPort) viewPort: ViewPort,
+		@inject(TYPES.CityGridContainer) cityGridContainer: CityGridContainer,
+		@inject(TYPES.CityManContainer) cityManContainer: CityManContainer,
 		@inject(TYPES.CityContainer) cityContainer: CityContainer,
 		@inject(TYPES.MainBarContainer) mainBarContainer: MainBarContainer
 	) {
 		this.store = store;
 		this.viewPort = viewPort;
+		this.cityGridContainer = cityGridContainer;
 		this.cityContainer = cityContainer;
+		this.cityManContainer = cityManContainer;
 		this.mainBarContainer = mainBarContainer;
 		this.initListeners();
 	}
