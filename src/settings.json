@@ -72,6 +72,11 @@
       "x": 7,
       "y": 7,
       "type": "ALTAR"
+    },
+    {
+      "x": 6,
+      "y": 8,
+      "type": "MAN"
     }
   ],
   "buildsSizes": {

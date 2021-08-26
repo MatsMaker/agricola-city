@@ -30,6 +30,11 @@ export interface CityItem {
   coordinate: Point;
 }
 
+export interface MapPoint {
+  x: number;
+  y: number;
+}
+
 @injectable()
 class CityContainer {
   protected store: StoreType;

@@ -4,7 +4,7 @@ import * as _ from "lodash";
 import { StoreType } from "../../store";
 import TYPES from "../../types/MainConfig";
 import { waitReRenderViewPort } from "./utils";
-import { viewPortResizeAction } from "./actions";
+import { viewPortResizeAction, viewPortTick } from "./actions";
 import { Application, Container, Ticker } from "pixi.js";
 import { onEvent } from "../../utils/store.subscribe";
 import { ViewPortState } from "./types";
@@ -33,6 +33,20 @@ class ViewPort {
 		return this.app.ticker.addOnce(fn, context, priority);
 	}
 
+	public addTick(
+		fn: (...params: any[]) => any,
+		context?: any,
+		priority?: number
+	): Ticker {
+		// TODO will be fine to create decorator for cowered method and not use cb
+		return this.app.ticker.add(fn, context, priority);
+	}
+
+	public removeTick(fn: (...params: any[]) => any, context?: any): Ticker {
+		// TODO will be fine to create decorator for cowered method and not use cb
+		return this.app.ticker.remove(fn, context);
+	}
+
 	public get scene(): Container {
 		return this.app.stage;
 	}
@@ -55,6 +69,10 @@ class ViewPort {
 		this.store.dispatch(viewPortResizeAction());
 		this.resize();
 		document.body.appendChild(this.app.view);
+
+		this.app.ticker.add((time) => { // TODO need move starting tick some other way
+			this.store.dispatch(viewPortTick(time));
+		});
 	};
 
 	protected initListeners = (): void => {

@@ -9,3 +9,7 @@ export interface ViewPortBaseState {
 	centerHeight: number;
 }
 export interface ViewPortState extends ViewPortBaseState { }
+
+export interface TickAction {
+	time: number;
+}

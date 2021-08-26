@@ -34,8 +34,8 @@ class StartGameStage {
 		@inject(TYPES.Store) store: StoreType,
 		@inject(TYPES.ViewPort) viewPort: ViewPort,
 		@inject(TYPES.CityGridContainer) cityGridContainer: CityGridContainer,
-		@inject(TYPES.CityManContainer) cityManContainer: CityManContainer,
 		@inject(TYPES.CityContainer) cityContainer: CityContainer,
+		@inject(TYPES.CityManContainer) cityManContainer: CityManContainer,
 		@inject(TYPES.MainBarContainer) mainBarContainer: MainBarContainer
 	) {
 		this.store = store;

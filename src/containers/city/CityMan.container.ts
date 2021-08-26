@@ -8,10 +8,18 @@ import { DrawCb } from "./types";
 import { IBaseMapObject, MAP_OBJECT_TYPE } from "../../types/MapEntities";
 import * as _ from "lodash";
 import ObjectsGenerator from "../objectsGenerator/ObjectsGenerator.container";
-import { CityItem } from "./City.container";
+import { CityItem, MapPoint } from "./City.container";
 import CityGridContainer from "./CityGrid.container";
-import { BUILD_REQUEST } from "../../core/city/action";
+import { BUILD_REQUEST, INIT_CITY } from "../../core/city/action";
 import { onEvent } from "../../utils/store.subscribe";
+import { VIEW_PORT_TICK } from "../../core/viewPort/actions";
+import { ActionType } from '../../types/actions';
+import { TickAction } from "../../core/viewPort/types";
+import { theSamePoint } from '../../utils/area';
+
+interface CityManItem extends CityItem {
+	goal: MapPoint;
+}
 
 @injectable()
 class CityManContainer {
@@ -21,7 +29,7 @@ class CityManContainer {
 	protected viewPort: ViewPort;
 
 	protected cityGridContainer: CityGridContainer;
-	protected cityMans: CityItem[] = [];
+	protected cityMans: CityManItem[] = [];
 
 	constructor(
 		@inject(TYPES.Store) store: StoreType,
@@ -44,7 +52,9 @@ class CityManContainer {
 
 	protected initListeners = (): void => {
 		const { subscribe } = this.store;
+		subscribe(onEvent(INIT_CITY, this.render.bind(this)));
 		subscribe(onEvent(BUILD_REQUEST, this.addManOnBuildRequest.bind(this)));
+		subscribe(onEvent(VIEW_PORT_TICK, this.moveMans.bind(this)));
 	};
 
 	public renderContent = () => {
@@ -67,17 +77,35 @@ class CityManContainer {
 			sprite: tile,
 			entity: data,
 			coordinate,
+			goal: this.getNextManGoal(coordinate),
 		});
 		this.view.addChild(tile);
 	};
 
 	protected render(): void {
-		this.viewPort.addTickOnce(() => { });
+		this.viewPort.addTickOnce(() => {
+			this.renderContent();
+		});
 	}
 
-	protected reRender(): void {
-		this.viewPort.addTickOnce(() => { });
-	}
+	protected moveMans = (action: ActionType<TickAction>): void => {
+		this.cityMans.forEach((m: CityManItem) => {
+			if (theSamePoint(m.coordinate, m.goal)) {
+				const nextGoalCoordinate = this.getNextManGoal(m.coordinate);
+				// console.log(nextGoalCoordinate);
+			} else {
+				// console.log("Move man ", m);
+			}
+		});
+	};
+
+	protected getNextManGoal = (currentPoint: MapPoint): MapPoint => {
+		console.log("//TODO need calc nex man goal from", currentPoint);
+		return {
+			x: 0,
+			y: 0,
+		};
+	};
 
 	public reset(): void {
 		this.cityMans.forEach((m: CityItem) => {
