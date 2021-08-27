@@ -4,7 +4,7 @@ import * as _ from "lodash";
 import { StoreType } from "../../store";
 import TYPES from "../../types/MainConfig";
 import { waitReRenderViewPort } from "./utils";
-import { viewPortResizeAction } from "./actions";
+import { viewPortResizeAction, viewPortTick } from "./actions";
 import { Application, Container, Ticker } from "pixi.js";
 import { onEvent } from "../../utils/store.subscribe";
 import { ViewPortState } from "./types";
@@ -70,9 +70,9 @@ class ViewPort {
 		this.resize();
 		document.body.appendChild(this.app.view);
 
-		// this.app.ticker.add((time) => { // TODO need move starting tick some other way
-		// 	this.store.dispatch(viewPortTick(time));
-		// });
+		this.app.ticker.add((time) => { // TODO need move starting tick some other way
+			this.store.dispatch(viewPortTick(time));
+		});
 	};
 
 	protected initListeners = (): void => {

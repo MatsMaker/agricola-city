@@ -17,6 +17,7 @@ import {
   INIT_CITY,
   RESET_CITY,
   requestCompletedAction,
+  CITY_MAN_REACHED,
 } from "../../core/city/action";
 import { ActionType } from "../../types/actions";
 import * as _ from "lodash";
@@ -28,6 +29,7 @@ export interface CityItem {
   sprite: Sprite;
   entity: IViewObject;
   coordinate: Point;
+  zIndex?: number;
 }
 
 export interface MapPoint {
@@ -70,7 +72,7 @@ class CityContainer {
     this.initListeners();
   };
 
-  protected resetCity = (): void => {
+  protected reset = (): void => {
     this.cityTerrains.forEach((t: CityItem) => {
       this.view.removeChild(t.sprite);
     });
@@ -84,10 +86,12 @@ class CityContainer {
 
   protected initListeners = (): void => {
     const { subscribe } = this.store;
+    this.view.sortableChildren = true;
     subscribe(onEvent(INIT_CITY, this.render.bind(this)));
-    subscribe(onEvent(RESET_CITY, this.resetCity.bind(this)));
+    subscribe(onEvent(RESET_CITY, this.reset.bind(this)));
     subscribe(onEvent(RE_RENDER_CITY, this.reRender.bind(this)));
     subscribe(onEvent(BUILD_REQUEST, this.buildRequest.bind(this)));
+    subscribe(onEvent(CITY_MAN_REACHED, this.reRender.bind(this)));
   };
 
   protected renderContent = () => {
@@ -139,7 +143,9 @@ class CityContainer {
   }
 
   protected reRender(): void {
-    this.viewPort.addTickOnce(() => { });
+    this.viewPort.addTickOnce(() => {
+      this.sortByZIndex();
+    });
   }
 
   protected buildRequest(action: ActionType<IBuildActionRequest>): void {
@@ -156,7 +162,8 @@ class CityContainer {
         this.renderObject
       );
     }
-    if (!city.addManRequest) { // TODO need fix this ManContainer connection
+    if (!city.addManRequest) {
+      // TODO need fix this ManContainer connection
       this.store.dispatch(requestCompletedAction());
     }
   }
@@ -171,6 +178,28 @@ class CityContainer {
         cityItem.sprite.texture = newTexture;
       }
       // });
+    });
+  };
+
+  protected sortByZIndex = (): void => {
+    this.cityObjects.forEach((co: CityItem) => {
+      let zIndex = 1;
+      switch (co.entity.type) {
+        case MAP_OBJECT_TYPE.LAND:
+          zIndex = co.coordinate.y + co.coordinate.x;
+          break;
+        case MAP_OBJECT_TYPE.ROAD:
+          zIndex = co.coordinate.y + co.coordinate.x + 100;
+          break;
+        case MAP_OBJECT_TYPE.ALTAR:
+        case MAP_OBJECT_TYPE.HOME:
+        case MAP_OBJECT_TYPE.SENATE:
+          zIndex = co.coordinate.y + co.coordinate.x + 200;
+          break;
+        default:
+          break;
+      }
+      co.sprite.zIndex = zIndex;
     });
   };
 }

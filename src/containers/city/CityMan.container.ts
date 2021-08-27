@@ -16,6 +16,7 @@ import {
 	CITY_MAN_REACHED,
 	INIT_CITY,
 	requestCompletedAction,
+	RESET_CITY,
 } from "../../core/city/action";
 import { onEvent } from "../../utils/store.subscribe";
 import CityManItem from "./CityMan.item";
@@ -53,8 +54,10 @@ class CityManContainer {
 	protected initListeners = (): void => {
 		const { subscribe } = this.store;
 		subscribe(onEvent(INIT_CITY, this.render.bind(this)));
+		subscribe(onEvent(RESET_CITY, this.reset.bind(this)));
 		subscribe(onEvent(BUILD_REQUEST, this.addManOnBuildRequest.bind(this)));
 		subscribe(onEvent(CITY_MAN_REACHED, this.cityManReached.bind(this)));
+		subscribe(onEvent(CITY_MAN_REACHED, this.reRender.bind(this)));
 	};
 
 	public renderContent = () => {
@@ -89,10 +92,18 @@ class CityManContainer {
 		});
 	}
 
+	protected reRender(): void {
+		this.viewPort.addTickOnce(() => {
+			this.sortByZIndex();
+		});
+	}
+
 	protected reset(): void {
 		this.cityMans.forEach((m: CityItem) => {
 			this.view.removeChild(m.sprite);
 		});
+		this.cityMans = [];
+		this.render();
 	}
 
 	protected addManOnBuildRequest(): void {
@@ -120,12 +131,21 @@ class CityManContainer {
 		const state = this.store.getState();
 		const manUid = state.lastAction.payload.entity.uid;
 		const theMan = this.cityMans.find((m: CityManItem) => m.entity.uid === manUid);
-		theMan.startMoveToNextPoint();
+		if (theMan) {
+			theMan.startMoveToNextPoint();
+		}
 	}
 
 	public getCityRodMap = () => {
 		const { city } = this.store.getState();
 		return city.objects;
+	};
+
+	protected sortByZIndex = (): void => {
+		this.cityMans.forEach((co: CityManItem) => {
+			const zIndex = co.coordinate.y + co.coordinate.x + 200;
+			co.sprite.zIndex = zIndex;
+		});
 	};
 }
 
