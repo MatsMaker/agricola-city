@@ -8,7 +8,7 @@ import {
 import { Point } from "pixi.js";
 import { theSamePoint } from "../../utils/area";
 import * as _ from "lodash";
-import { TweenLite } from "gsap";
+import { Power0, TweenLite } from "gsap";
 import { ICityManReduced } from "../../core/city/types";
 
 export default class CityManItem implements CityItem {
@@ -36,7 +36,7 @@ export default class CityManItem implements CityItem {
 		TweenLite.to(this.sprite, this.moveSpeed, {
 			x: nextPositionPoint.x,
 			y: nextPositionPoint.y,
-			ease: "none",
+			ease: Power0.easeNone,
 			onComplete: () => {
 				this.from = this.coordinate.clone();
 				this.coordinate = nextCoordinatePoint.clone();
@@ -48,7 +48,7 @@ export default class CityManItem implements CityItem {
 		});
 	};
 
-	protected findNextPoint = (): Point => { // TODO need fix choose nex point
+	protected findNextPoint = (): Point => {
 		const mapObjects = this.lookAround();
 		const seePointDeff = [
 			// do not move by diagonal
@@ -59,27 +59,36 @@ export default class CityManItem implements CityItem {
 		];
 		const pointsToMove: MapPoint[] = [];
 		seePointDeff.forEach(([j, i]: number[]) => {
+			const yIndex = this.coordinate.y + i;
+			const xIndex = this.coordinate.x + j;
 			if (
-				mapObjects[this.coordinate.y + i] &&
-				mapObjects[this.coordinate.y + i][this.coordinate.x + j] &&
-				mapObjects[this.coordinate.y + i][this.coordinate.x + j].type ===
-				MAP_OBJECT_TYPE.ROAD &&
+				mapObjects[yIndex] &&
+				mapObjects[yIndex][xIndex] &&
+				mapObjects[yIndex][xIndex].type === MAP_OBJECT_TYPE.ROAD
+				&&
 				!theSamePoint(this.from, {
-					x: this.coordinate.x + j,
-					y: this.coordinate.y + i,
+					x: xIndex,
+					y: yIndex,
 				})
 			) {
 				pointsToMove.push({
-					x: this.coordinate.x + j,
-					y: this.coordinate.y + i,
+					x: xIndex,
+					y: yIndex,
 				});
 			}
 		});
 
-		const willMoveToIndex = _.random(0, pointsToMove.length - 1);
-		return new Point(
-			pointsToMove[willMoveToIndex].x,
-			pointsToMove[willMoveToIndex].y
-		);
+		let nextPoint: Point;
+		if (pointsToMove.length == 0) {// need move to back
+			nextPoint = this.from.clone();
+		} else {
+			const willMoveToIndex = _.random(0, pointsToMove.length - 1);
+			nextPoint = new Point(
+				pointsToMove[willMoveToIndex].x,
+				pointsToMove[willMoveToIndex].y
+			);
+		}
+
+		return nextPoint;
 	};
 }

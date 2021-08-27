@@ -18,5 +18,5 @@ export function mapArea(size: number, cb: (i: number, j: number) => void) {
 }
 
 export function theSamePoint(point1: { x: number, y: number }, point2: { x: number, y: number }) {
-	return point1.x === point2.x && point1.y === point2.x;
+	return point1.x === point2.x && point1.y === point2.y;
 }
