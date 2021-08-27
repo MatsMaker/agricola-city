@@ -74,6 +74,10 @@ class CityManContainer {
 		});
 		cityManItem.lookAround = this.getCityRodMap;
 		cityManItem.onMoved = this.cityManMoved;
+		cityManItem.getPositionByCoordinate = this.cityGridContainer.getPositionByCoordinate;
+		cityManItem.onMoved = () => {
+			console.log("I moved. Need set next point"); //TODO man came to goal. Need set new point
+		}
 		cityManItem.startMoveAnimation();
 
 		this.cityMans.push(cityManItem);

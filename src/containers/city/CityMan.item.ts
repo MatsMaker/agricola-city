@@ -7,7 +7,8 @@ import {
 } from "../../types/MapEntities";
 import { Point } from "pixi.js";
 import { theSamePoint } from "../../utils/area";
-import * as _ from 'lodash';
+import * as _ from "lodash";
+import { TweenLite } from "gsap";
 
 export default class CityManItem implements CityItem {
 	public sprite: Sprite;
@@ -15,10 +16,11 @@ export default class CityManItem implements CityItem {
 	public coordinate: Point;
 	private from: Point;
 	// private to: Point;
-	// private speed: number = 300;
+	private moveSpeed: number = 1; // tile/sec
 
 	public lookAround: () => IBaseMapObject[][]; //  city from ICityState;
 	public onMoved: () => void = () => { };
+	public getPositionByCoordinate: (position: Point) => Point;
 
 	constructor(item: CityItem) {
 		this.sprite = item.sprite;
@@ -28,7 +30,16 @@ export default class CityManItem implements CityItem {
 	}
 
 	public startMoveAnimation = () => {
-		console.log("move animation", this.findNextPoint());
+		const nextCoordinatePoint = this.findNextPoint();
+		const nextPositionPoint = this.getPositionByCoordinate(nextCoordinatePoint);
+		TweenLite.to(this.sprite, this.moveSpeed, {
+			x: nextPositionPoint.x,
+			y: nextPositionPoint.y,
+			ease: "none",
+			onComplete: () => {
+				this.onMoved();
+			},
+		});
 	};
 
 	protected findNextPoint = (): Point => {

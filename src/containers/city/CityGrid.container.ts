@@ -7,7 +7,12 @@ import { onEvent } from "../../utils/store.subscribe";
 import ViewPort from "../../core/viewPort/ViewPort";
 import { DrawCb } from "./types";
 import { IBaseMapObject } from "../../types/MapEntities";
-import { RE_RENDER_CITY, INIT_CITY, RESET_CITY, onTerrainClickAction } from "../../core/city/action";
+import {
+	RE_RENDER_CITY,
+	INIT_CITY,
+	RESET_CITY,
+	onTerrainClickAction,
+} from "../../core/city/action";
 import * as _ from "lodash";
 import ObjectsGenerator from "../objectsGenerator/ObjectsGenerator.container";
 
@@ -97,20 +102,7 @@ class CityGridContainer {
 		coordinate: Point,
 		fn: (drawData: DrawCb) => void
 	) => {
-		const { tileWidth, tileHeight } = this.store.getState().config.citySize;
-		const { centerWidth } = this.viewPort.getState();
-
-		const drawStart: Point = new Point(centerWidth - tileWidth, tileHeight);
-
-		// cartesian 2D coordinate
-		const x = coordinate.x * tileWidth;
-		const y = coordinate.y * tileHeight;
-
-		// iso coordinate
-		const isoX = x - y + drawStart.x;
-		const isoY = (x + y) / 2 + drawStart.y;
-
-		const position = new Point(isoX, isoY);
+		const position = this.getPositionByCoordinate(coordinate);
 		const data = this.objectsGenerator.createMapObject(item);
 		fn({ position, data, coordinate });
 	};
@@ -176,6 +168,25 @@ class CityGridContainer {
 		const x = Math.trunc(position.x / tileHeight);
 		const y = Math.trunc(position.y / tileHeight);
 		return new Point(x, y);
+	};
+
+	public getPositionByCoordinate = (coordinate: Point): Point => {
+		const { tileWidth, tileHeight } = this.store.getState().config.citySize;
+		const { centerWidth } = this.viewPort.getState();
+
+		const drawStart: Point = new Point(centerWidth - tileWidth, tileHeight);
+
+		// cartesian 2D coordinate
+		const x = coordinate.x * tileWidth;
+		const y = coordinate.y * tileHeight;
+
+		// iso coordinate
+		const isoX = x - y + drawStart.x;
+		const isoY = (x + y) / 2 + drawStart.y;
+
+		const position = new Point(isoX, isoY);
+
+		return position;
 	};
 
 	static distancePointToLIne = (X1: Point, X2: Point, P0: Point): number => {
