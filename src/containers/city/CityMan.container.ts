@@ -21,6 +21,7 @@ import {
 import { onEvent } from "../../utils/store.subscribe";
 import CityManItem from "./CityMan.item";
 import { ICityManReduced } from "core/city/types";
+import { uid } from "uid";
 
 @injectable()
 class CityManContainer {
@@ -117,6 +118,7 @@ class CityManContainer {
 				x: cp.x,
 				y: cp.y,
 				type: MAP_OBJECT_TYPE.MAN,
+				uid: uid(),
 			};
 			this.cityGridContainer.drawOne(manItem, cp, this.renderMan);
 			this.store.dispatch(requestCompletedAction());
@@ -130,11 +132,15 @@ class CityManContainer {
 	protected cityManReached = () => {
 		const state = this.store.getState();
 		const manUid = state.lastAction.payload.entity.uid;
-		const theMan = this.cityMans.find((m: CityManItem) => m.entity.uid === manUid);
+		const theMan = this.cityMans.find(
+			(m: CityManItem) => m.entity.uid === manUid
+		);
 		if (theMan) {
 			theMan.startMoveToNextPoint();
+		} else {
+			console.warn("do not found man by uid");
 		}
-	}
+	};
 
 	public getCityRodMap = () => {
 		const { city } = this.store.getState();

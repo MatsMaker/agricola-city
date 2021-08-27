@@ -65,6 +65,7 @@ class CityCore {
 					x: citySpawnPoint.x,
 					y: citySpawnPoint.y,
 					type: MAP_OBJECT_TYPE.MAN,
+					uid: uid(),
 				};
 				this.cityState.mans.push(newMan);
 				nextState = {

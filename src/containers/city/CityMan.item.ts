@@ -16,7 +16,7 @@ export default class CityManItem implements CityItem {
 	public entity: IViewObject;
 	public coordinate: Point;
 	private from: Point;
-	// private to: Point;
+	private to: Point;
 	private moveSpeed: number = 1; // tile/sec
 
 	public lookAround: () => IBaseMapObject[][]; //  city from ICityState;
@@ -32,19 +32,22 @@ export default class CityManItem implements CityItem {
 
 	public startMoveToNextPoint = () => {
 		const nextCoordinatePoint = this.findNextPoint();
+		this.to = nextCoordinatePoint;
 		const nextPositionPoint = this.getPositionByCoordinate(nextCoordinatePoint);
 		TweenLite.to(this.sprite, this.moveSpeed, {
 			x: nextPositionPoint.x,
 			y: nextPositionPoint.y,
 			ease: Power0.easeNone,
-			onComplete: () => {
-				this.from = this.coordinate.clone();
-				this.coordinate = nextCoordinatePoint.clone();
-				this.onMoved({
-					entity: this.entity,
-					newCoordinate: nextCoordinatePoint,
-				});
-			},
+			onComplete: this.reachedPoint,
+		});
+	};
+
+	protected reachedPoint = () => {
+		this.from = this.coordinate.clone();
+		this.coordinate = this.to.clone();
+		this.onMoved({
+			entity: this.entity,
+			newCoordinate: this.to.clone(),
 		});
 	};
 
@@ -64,8 +67,7 @@ export default class CityManItem implements CityItem {
 			if (
 				mapObjects[yIndex] &&
 				mapObjects[yIndex][xIndex] &&
-				mapObjects[yIndex][xIndex].type === MAP_OBJECT_TYPE.ROAD
-				&&
+				mapObjects[yIndex][xIndex].type === MAP_OBJECT_TYPE.ROAD &&
 				!theSamePoint(this.from, {
 					x: xIndex,
 					y: yIndex,
@@ -79,7 +81,8 @@ export default class CityManItem implements CityItem {
 		});
 
 		let nextPoint: Point;
-		if (pointsToMove.length == 0) {// need move to back
+		if (pointsToMove.length == 0) {
+			// need move to back
 			nextPoint = this.from.clone();
 		} else {
 			const willMoveToIndex = _.random(0, pointsToMove.length - 1);

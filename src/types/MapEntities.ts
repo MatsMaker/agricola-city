@@ -29,6 +29,4 @@ export interface IViewObject extends IBaseMapObject {
 	offsetY?: number;
 	scale?: number;
 	anchor?: Point;
-
-	uid?: string | number;
 }

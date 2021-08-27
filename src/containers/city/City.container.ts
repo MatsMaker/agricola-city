@@ -182,6 +182,7 @@ class CityContainer {
   };
 
   protected sortByZIndex = (): void => {
+    const { config } = this.store.getState();
     this.cityObjects.forEach((co: CityItem) => {
       let zIndex = 1;
       switch (co.entity.type) {
@@ -193,9 +194,11 @@ class CityContainer {
           break;
         case MAP_OBJECT_TYPE.ALTAR:
         case MAP_OBJECT_TYPE.HOME:
-        case MAP_OBJECT_TYPE.SENATE:
-          zIndex = co.coordinate.y + co.coordinate.x + 200;
+        case MAP_OBJECT_TYPE.SENATE: {
+          const textureSize = config.buildsSizes[co.entity.type];
+          zIndex = co.coordinate.y + co.coordinate.x + 200 + textureSize;
           break;
+        }
         default:
           break;
       }
