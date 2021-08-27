@@ -1,6 +1,6 @@
 import { IsoPoint } from "../../containers/city/types";
 import { ActionType } from "../../types/actions";
-import { IBuildActionRequest } from "./types";
+import { IBuildActionRequest, ICityManReduced } from "./types";
 
 export const INIT_CITY = "@CORE/City/init_city";
 export const RESET_CITY = "@CORE/City/reset";
@@ -9,6 +9,7 @@ export const RE_RENDER_CITY = "@CORE/City/re_render_city";
 export const BUILD_REQUEST = "@CORE/City/build_request";
 export const REQUEST_COMPLETED = "@CORE/City/request_completed";
 export const ON_TERRAIN_CLICK = "@CORE/City/on_terrain_click";
+export const CITY_MAN_REACHED = "@Core/City/city_man_reached";
 
 export function initCity(): ActionType {
 	return {
@@ -54,4 +55,11 @@ export function onTerrainClickAction(payload: IsoPoint): ActionType<IsoPoint> {
 		type: ON_TERRAIN_CLICK,
 		payload,
 	};
+}
+
+export function cityManReducedAction(payload: ICityManReduced): ActionType<ICityManReduced> {
+	return {
+		type: CITY_MAN_REACHED,
+		payload,
+	}
 }

@@ -10,9 +10,16 @@ import * as _ from "lodash";
 import ObjectsGenerator from "../objectsGenerator/ObjectsGenerator.container";
 import { CityItem } from "./City.container";
 import CityGridContainer from "./CityGrid.container";
-import { BUILD_REQUEST, INIT_CITY, requestCompletedAction } from "../../core/city/action";
+import {
+	BUILD_REQUEST,
+	cityManReducedAction,
+	CITY_MAN_REACHED,
+	INIT_CITY,
+	requestCompletedAction,
+} from "../../core/city/action";
 import { onEvent } from "../../utils/store.subscribe";
 import CityManItem from "./CityMan.item";
+import { ICityManReduced } from "core/city/types";
 
 @injectable()
 class CityManContainer {
@@ -47,18 +54,13 @@ class CityManContainer {
 		const { subscribe } = this.store;
 		subscribe(onEvent(INIT_CITY, this.render.bind(this)));
 		subscribe(onEvent(BUILD_REQUEST, this.addManOnBuildRequest.bind(this)));
-		// subscribe(onEvent(VIEW_PORT_TICK, this.moveMans.bind(this)));
+		subscribe(onEvent(CITY_MAN_REACHED, this.cityManReached.bind(this)));
 	};
 
 	public renderContent = () => {
 		const appState = this.store.getState();
 		appState.city.mans.forEach((d: IBaseMapObject) => {
-			const item: IBaseMapObject = {
-				x: d.x,
-				y: d.y,
-				type: d.type,
-			};
-			this.cityGridContainer.drawOne(item, new Point(d.x, d.y), this.renderMan);
+			this.cityGridContainer.drawOne(d, new Point(d.x, d.y), this.renderMan);
 		});
 	};
 
@@ -66,7 +68,6 @@ class CityManContainer {
 		const { data, coordinate } = drawData;
 		const tile = this.objectsGenerator.renderMan(drawData);
 		tile.name = `cityContainer/cityTerrains/${data.type}`;
-
 		const cityManItem: CityManItem = new CityManItem({
 			sprite: tile,
 			entity: data,
@@ -74,11 +75,9 @@ class CityManContainer {
 		});
 		cityManItem.lookAround = this.getCityRodMap;
 		cityManItem.onMoved = this.cityManMoved;
-		cityManItem.getPositionByCoordinate = this.cityGridContainer.getPositionByCoordinate;
-		cityManItem.onMoved = () => {
-			console.log("I moved. Need set next point"); //TODO man came to goal. Need set new point
-		}
-		cityManItem.startMoveAnimation();
+		cityManItem.getPositionByCoordinate =
+			this.cityGridContainer.getPositionByCoordinate;
+		cityManItem.startMoveToNextPoint();
 
 		this.cityMans.push(cityManItem);
 		this.view.addChild(tile);
@@ -113,9 +112,15 @@ class CityManContainer {
 		}
 	}
 
-	protected cityManMoved = () => {
-		console.info('cityManMoved');
-		// this.store.dispatch(cityManMovedAction(from, to));
+	protected cityManMoved = (data: ICityManReduced): void => {
+		this.store.dispatch(cityManReducedAction(data));
+	};
+
+	protected cityManReached = () => {
+		const state = this.store.getState();
+		const manUid = state.lastAction.payload.entity.uid;
+		const theMan = this.cityMans.find((m: CityManItem) => m.entity.uid === manUid);
+		theMan.startMoveToNextPoint();
 	}
 
 	public getCityRodMap = () => {

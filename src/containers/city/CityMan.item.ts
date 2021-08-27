@@ -9,6 +9,7 @@ import { Point } from "pixi.js";
 import { theSamePoint } from "../../utils/area";
 import * as _ from "lodash";
 import { TweenLite } from "gsap";
+import { ICityManReduced } from "../../core/city/types";
 
 export default class CityManItem implements CityItem {
 	public sprite: Sprite;
@@ -19,7 +20,7 @@ export default class CityManItem implements CityItem {
 	private moveSpeed: number = 1; // tile/sec
 
 	public lookAround: () => IBaseMapObject[][]; //  city from ICityState;
-	public onMoved: () => void = () => { };
+	public onMoved: (data: ICityManReduced) => void = () => { };
 	public getPositionByCoordinate: (position: Point) => Point;
 
 	constructor(item: CityItem) {
@@ -29,7 +30,7 @@ export default class CityManItem implements CityItem {
 		this.from = item.coordinate.clone();
 	}
 
-	public startMoveAnimation = () => {
+	public startMoveToNextPoint = () => {
 		const nextCoordinatePoint = this.findNextPoint();
 		const nextPositionPoint = this.getPositionByCoordinate(nextCoordinatePoint);
 		TweenLite.to(this.sprite, this.moveSpeed, {
@@ -37,22 +38,24 @@ export default class CityManItem implements CityItem {
 			y: nextPositionPoint.y,
 			ease: "none",
 			onComplete: () => {
-				this.onMoved();
+				this.from = this.coordinate.clone();
+				this.coordinate = nextCoordinatePoint.clone();
+				this.onMoved({
+					entity: this.entity,
+					newCoordinate: nextCoordinatePoint,
+				});
 			},
 		});
 	};
 
-	protected findNextPoint = (): Point => {
+	protected findNextPoint = (): Point => { // TODO need fix choose nex point
 		const mapObjects = this.lookAround();
 		const seePointDeff = [
-			[-1, -1],
+			// do not move by diagonal
 			[0, -1],
-			[1, -1],
 			[-1, 0],
 			[1, 0],
-			[-1, 1],
 			[0, 1],
-			[1, 1],
 		];
 		const pointsToMove: MapPoint[] = [];
 		seePointDeff.forEach(([j, i]: number[]) => {

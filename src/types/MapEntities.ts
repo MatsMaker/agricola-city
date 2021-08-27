@@ -17,6 +17,7 @@ export interface IBaseMapObject {
 	x: number;
 	y: number;
 	type: MAP_OBJECT_TYPE;
+	uid?: string | number;
 }
 
 export interface IViewObject extends IBaseMapObject {
@@ -29,5 +30,5 @@ export interface IViewObject extends IBaseMapObject {
 	scale?: number;
 	anchor?: Point;
 
-	id?: string | number;
+	uid?: string | number;
 }

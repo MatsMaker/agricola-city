@@ -13,11 +13,13 @@ class CityManEntity implements IViewObject {
 	public offsetY: number = 0;
 	public scale: number = 0.5;
 	public anchor: Point = new Point(0, 1);
+	public uid: any;
 
-	constructor(x: number, y: number, texture: Texture) {
+	constructor(x: number, y: number, texture: Texture, uid: any) {
 		this.x = x;
 		this.y = y;
 		this.texture = texture;
+		this.uid = uid;
 	}
 }
 

@@ -8,6 +8,7 @@ import TYPES from "../../types/MainConfig";
 import { IBuildActionRequest } from "./types";
 import { Point } from "pixi.js";
 import { mapArea } from "../../utils/area";
+import { uid } from 'uid';
 
 @injectable()
 class CityCore {
@@ -157,6 +158,7 @@ class CityCore {
 			x: citySpawnPoint.x,
 			y: citySpawnPoint.y,
 			type: MAP_OBJECT_TYPE.MAN,
+			uid: uid(),
 		});
 	}
 }

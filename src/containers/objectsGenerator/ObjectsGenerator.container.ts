@@ -91,7 +91,8 @@ export default class ObjectsGenerator {
 				mapObject = new CityManEntity(
 					object.x,
 					object.y,
-					grasTextures[randomLandTexture]
+					grasTextures[randomLandTexture],
+					object.uid
 				);
 
 				break;
