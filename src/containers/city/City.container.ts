@@ -195,7 +195,7 @@ class CityContainer {
         case MAP_OBJECT_TYPE.ALTAR:
         case MAP_OBJECT_TYPE.HOME:
         case MAP_OBJECT_TYPE.SENATE: {
-          const textureSize = config.buildsSizes[co.entity.type];
+          const textureSize = config.buildsSizes[co.entity.type] - 1;
           zIndex = co.coordinate.y + co.coordinate.x + 200 + textureSize;
           break;
         }
