@@ -24,6 +24,7 @@ import * as _ from "lodash";
 import { IBuildActionRequest } from "../../core/city/types";
 import ObjectsGenerator from "../objectsGenerator/ObjectsGenerator.container";
 import CityGridContainer from "./CityGrid.container";
+import CityRoad from "../objectsGenerator/CityRoad.entity";
 
 export interface CityItem {
   sprite: Sprite;
@@ -166,15 +167,28 @@ class CityContainer {
       // TODO need fix this ManContainer connection
       this.store.dispatch(requestCompletedAction());
     }
+    this.updateAdjacentRoadTiles();
   }
 
   protected updateAdjacentRoadTiles = (): void => {
     this.cityObjects.forEach((cityItem: CityItem) => {
-      // mapArea(3, (i, j) => { TODO need add optimization to not update all ROD sprite
+      // mapArea(3, (i, j) => { TODO need add optimization to not update all ROD sprite and change this mutable
       if (cityItem.entity.type === MAP_OBJECT_TYPE.ROAD) {
         const newTexture = this.objectsGenerator.getRoadMasksTypes(
           cityItem.coordinate
         );
+        const newRoadEntity: IViewObject = new CityRoad(
+          cityItem.entity.x,
+          cityItem.entity.y,
+          newTexture
+        );
+        cityItem.entity = newRoadEntity;
+        const position = this.cityGridContainer.getPositionByCoordinate(
+          cityItem.coordinate
+        );
+        cityItem.sprite.x = position.x + newRoadEntity.offsetX;
+        cityItem.sprite.y = position.y + newRoadEntity.offsetY;
+
         cityItem.sprite.texture = newTexture;
       }
       // });

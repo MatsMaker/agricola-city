@@ -220,22 +220,24 @@ export default class ObjectsGenerator {
 		const { city } = this.store.getState();
 		const roadTextures = this.assetsLoader.getResource("img/road").textures;
 
-		const roadMaskTexture: IRoadMask = roadMasksTypes.find((maskType: IRoadMask) => {
-			let doesNotFit = false;
-			mapArea(maskType.mask.length, (i, j) => {
-				const mi = coordinate.y - 1 + i;
-				const mj = coordinate.x - 1 + j;
-				if (
-					maskType.mask[i] !== undefined &&
-					maskType.mask[i][j] !== undefined && //do not matter
-					city.objects[mi] !== undefined && //end map
-					maskType.mask[i][j] !== !!city.objects[mi][mj]
-				) {
-					doesNotFit = true;
-				}
-			});
-			return !doesNotFit;
-		});
+		const roadMaskTexture: IRoadMask = roadMasksTypes.find(
+			(maskType: IRoadMask) => {
+				let doesNotFit = false;
+				mapArea(maskType.mask.length, (i, j) => {
+					const mi = coordinate.y - 1 + i;
+					const mj = coordinate.x - 1 + j;
+					if (
+						maskType.mask[i] !== undefined &&
+						maskType.mask[i][j] !== undefined && //do not matter
+						city.objects[mi] !== undefined && //end map
+						maskType.mask[i][j] !== !!city.objects[mi][mj]
+					) {
+						doesNotFit = true;
+					}
+				});
+				return !doesNotFit;
+			}
+		);
 
 		return roadTextures[roadMaskTexture.textureTile];
 	};
